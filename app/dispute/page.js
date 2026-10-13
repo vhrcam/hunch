@@ -41,7 +41,7 @@ export default function Dispute() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    api("transactions").then((d) => setTransactions(d.transactions)).catch(() => setError("Couldn't load your payments. Refresh to try again."));
+    api("transactions").then((d) => setTransactions(d.transactions)).catch(() => setTransactions([]));
   }, []);
 
   async function run(kind, work) {
@@ -79,7 +79,7 @@ export default function Dispute() {
     setStep(2);
   };
 
-  const noList = transactions?.length === 0 || (error && !transactions);
+  const noList = transactions?.length === 0;
 
   const toggle = (item) => setChecked((c) => (c.includes(item) ? c.filter((i) => i !== item) : [...c, item]));
 
@@ -98,7 +98,7 @@ export default function Dispute() {
       {step === 1 && (
         <div className="space-y-4">
           <p className="font-type text-paper text-xl">Which payment went wrong?</p>
-          {!transactions && !error && <p className="font-type text-muted animate-pulse">Pulling your recent payments...</p>}
+          {!transactions && <p className="font-type text-muted animate-pulse">Pulling your recent payments...</p>}
           {noList && <p className="text-muted">No recent payments showed up from PayPal yet. Enter the payment yourself and Hunch takes it from there.</p>}
           {transactions?.map((t) => (
             <button
@@ -115,7 +115,7 @@ export default function Dispute() {
             </button>
           ))}
           {transactions?.length > 0 && <button className="btn" disabled={!picked} onClick={() => setStep(2)}>Continue</button>}
-          {!noList && (
+          {transactions?.length > 0 && (
             <button onClick={() => setManual(!manual)} className="block text-sm text-muted hover:text-amber pt-2">
               Don&apos;t see it? Enter it yourself {manual ? "▴" : "▾"}
             </button>
