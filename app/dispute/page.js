@@ -95,36 +95,36 @@ export default function Dispute() {
   const toggle = (item) => setChecked((c) => (c.includes(item) ? c.filter((i) => i !== item) : [...c, item]));
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-3">
-        <p className="font-type text-amber">After it goes wrong</p>
-        <h1 className="font-type text-4xl text-paper">File a dispute</h1>
-        <p className="text-muted">Hunch finds the payment, builds your case and files it with PayPal. You review every word before it goes out.</p>
+    <div className="space-y-10">
+      <div className="space-y-4">
+        <p className="label">After it goes wrong</p>
+        <h1 className="headline text-4xl sm:text-5xl">File a dispute</h1>
+        <p className="text-muted text-lg max-w-2xl">Hunch finds the payment, builds your case and files it with PayPal. You review every word before it goes out.</p>
       </div>
 
       <Steps current={step} />
 
       <div hidden={step !== 1} className="space-y-4">
-        <p className="font-type text-paper text-xl">Which payment went wrong?</p>
-        {!transactions && <p className="font-type text-muted animate-pulse">Pulling your recent payments...</p>}
+        <h2 className="headline text-2xl">Which payment went wrong?</h2>
+        {!transactions && <p className="text-muted text-sm animate-pulse">Pulling your recent payments...</p>}
         {noList && <p className="text-muted">No recent payments showed up from PayPal yet. Enter the payment yourself and Hunch takes it from there.</p>}
         {transactions?.map((t) => (
           <button
             key={t.id}
             onClick={() => setPicked(t)}
-            className={`card w-full text-left flex items-start justify-between gap-4 hover:border-amber! ${picked?.id === t.id ? "border-amber! ring-1 ring-amber" : ""}`}
+            className={`card w-full text-left flex items-start justify-between gap-4 hover:border-line-strong! ${picked?.id === t.id ? "border-paper! ring-1 ring-paper" : ""}`}
           >
             <div className="space-y-1 min-w-0">
-              <p className="font-semibold text-paper">{t.counterparty}</p>
+              <p className="font-medium text-paper">{t.counterparty}</p>
               <p className="text-muted text-sm truncate">{[t.date && day(t.date), t.email].filter(Boolean).join(" · ")}</p>
               {t.note && <p className="text-muted text-sm italic">&ldquo;{t.note}&rdquo;</p>}
             </div>
-            <p className="font-type text-2xl text-paper shrink-0">{money(t.amount, t.currency)}</p>
+            <p className="font-mono text-lg text-paper shrink-0">{money(t.amount, t.currency)}</p>
           </button>
         ))}
         {transactions?.length > 0 && <button className="btn" disabled={!picked} onClick={() => go(2)}>Continue</button>}
         {transactions?.length > 0 && (
-          <button onClick={() => setManual(!manual)} className="block text-sm text-muted hover:text-amber pt-2">
+          <button onClick={() => setManual(!manual)} className="block text-sm text-muted transition-colors hover:text-paper pt-2">
             Don&apos;t see it? Enter it yourself {manual ? "▴" : "▾"}
           </button>
         )}
@@ -133,7 +133,7 @@ export default function Dispute() {
 
       {step === 2 && (
         <form onSubmit={build} className="space-y-4">
-          <p className="font-type text-paper text-xl">Tell us what happened in your own words.</p>
+          <h2 className="headline text-2xl">Tell us what happened in your own words.</h2>
           <p className="text-muted text-sm">
             Your payment: {picked.counterparty}, {money(picked.amount, picked.currency)}{picked.date && ` on ${day(picked.date)}`}
           </p>
@@ -144,14 +144,14 @@ export default function Dispute() {
               <textarea className="input h-36" value={story} onChange={(e) => setStory(e.target.value)} placeholder="What did you pay for, what went wrong, and what has the seller said?" />
               <div className="flex flex-wrap gap-2">
                 {stories.map((s) => (
-                  <button key={s} type="button" onClick={() => setStory(s)} className="text-sm text-muted border border-line rounded-full px-3 py-1 text-left hover:text-amber hover:border-amber">
+                  <button key={s} type="button" onClick={() => setStory(s)} className="text-sm text-muted border border-line rounded-full px-3 py-1 text-left transition-colors hover:text-paper hover:border-line-strong">
                     {s}
                   </button>
                 ))}
               </div>
               <div className="flex items-center gap-4">
                 <button className="btn" disabled={!story.trim()}>Build my case</button>
-                <button type="button" onClick={() => go(1)} className="text-muted text-sm hover:text-amber">Back</button>
+                <button type="button" onClick={() => go(1)} className="text-muted text-sm transition-colors hover:text-paper">Back</button>
               </div>
             </div>
           )}
@@ -163,8 +163,8 @@ export default function Dispute() {
           <div className="card space-y-4">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="space-y-1">
-                <p className="font-type text-muted text-sm">Dispute category</p>
-                <p className="font-type text-2xl text-paper">{built.reasonLabel}</p>
+                <p className="label">Dispute category</p>
+                <p className="headline text-3xl">{built.reasonLabel}</p>
                 <p className="text-muted text-sm">Claiming {money(built.amount, picked.currency)} from {picked.counterparty}</p>
               </div>
               <span className={`stamp ${strengthColor[built.strength]}`}>{built.strength} case</span>
@@ -173,22 +173,22 @@ export default function Dispute() {
           </div>
 
           <div className="card space-y-3">
-            <p className="font-type text-amber">Your statement to PayPal</p>
-            <p className="font-semibold text-paper">{built.title}</p>
+            <p className="label">Your statement to PayPal</p>
+            <p className="font-medium text-paper">{built.title}</p>
             <textarea className="input h-48 leading-relaxed" value={description} onChange={(e) => setDescription(e.target.value)} />
             <p className="text-muted text-sm">Edit anything that isn&apos;t exactly right. This is what PayPal reads.</p>
           </div>
 
           <div className="card space-y-3">
             <div className="flex justify-between gap-4">
-              <p className="font-type text-amber">Evidence to gather</p>
-              <p className="font-type text-muted text-sm">{checked.length}/{built.evidence.length} ready</p>
+              <p className="label">Evidence to gather</p>
+              <p className="font-mono text-xs text-faint">{checked.length}/{built.evidence.length} ready</p>
             </div>
             {built.evidence.map((ev) => (
               <label key={ev.item} className="flex gap-3 border-t border-line pt-3 cursor-pointer">
-                <input type="checkbox" checked={checked.includes(ev.item)} onChange={() => toggle(ev.item)} className="mt-1 accent-amber w-4 h-4 shrink-0" />
+                <input type="checkbox" checked={checked.includes(ev.item)} onChange={() => toggle(ev.item)} className="mt-1 accent-paper w-4 h-4 shrink-0" />
                 <span>
-                  <span className={`block font-semibold ${checked.includes(ev.item) ? "text-muted line-through" : ""}`}>{ev.item}</span>
+                  <span className={`block font-medium ${checked.includes(ev.item) ? "text-faint line-through" : "text-paper"}`}>{ev.item}</span>
                   <span className="block text-muted text-sm">{ev.why}</span>
                 </span>
               </label>
@@ -197,7 +197,7 @@ export default function Dispute() {
 
           {built.tips.length > 0 && (
             <div className="card space-y-2">
-              <p className="font-type text-amber">Detective&apos;s tips</p>
+              <p className="label">Detective&apos;s tips</p>
               <ul className="list-disc pl-5 space-y-1 text-muted">
                 {built.tips.map((t) => <li key={t}>{t}</li>)}
               </ul>
@@ -209,7 +209,7 @@ export default function Dispute() {
           ) : (
             <div className="flex items-center gap-4">
               <button className="btn" disabled={!description.trim()} onClick={file}>File dispute with PayPal</button>
-              <button onClick={() => go(2)} className="text-muted text-sm hover:text-amber">Back</button>
+              <button onClick={() => go(2)} className="text-muted text-sm transition-colors hover:text-paper">Back</button>
             </div>
           )}
         </div>
