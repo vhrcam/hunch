@@ -1,5 +1,7 @@
 const platforms = ["facebook.com", "instagram.com", "ebay.com", "craigslist.org", "offerup.com", "etsy.com", "mercari.com", "poshmark.com", "tiktok.com", "x.com", "twitter.com", "reddit.com"];
 
+const socialNames = { facebook: "Facebook", instagram: "Instagram", twitter: "X", tiktok: "TikTok", linkedin: "LinkedIn", youtube: "YouTube" };
+
 const pressure = /act (now|fast)|today only|only \d+ left|last one|hurry|before it'?s gone|first come|deposit to hold|other buyers|limited time|urgent/gi;
 const payFlags = /friends (and|&) family|gift ?cards?|bitcoin|crypto|zelle|wire transfer|cash ?app|western union|no refunds?/gi;
 
@@ -38,7 +40,7 @@ export async function readPage(url) {
       email: /[\w.+-]+@[\w-]+\.[\w.]+/.test(text),
       phone: /\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}/.test(text),
       address: /\d+ [\w ]+ (st|street|ave|avenue|rd|road|blvd|dr|drive|ln|lane|suite)\b/i.test(text),
-      socials: [...new Set((html.match(/(facebook|instagram|twitter|tiktok|linkedin|youtube)\.com\/[\w.-]+/gi) || []).map((s) => s.split(".")[0].toLowerCase()))],
+      socials: [...new Set((html.match(/(facebook|instagram|twitter|tiktok|linkedin|youtube)\.com\/[\w.-]+/gi) || []).map((s) => socialNames[s.split(".")[0].toLowerCase()]))],
     };
   } catch {
     return null;
