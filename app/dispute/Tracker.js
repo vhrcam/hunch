@@ -8,6 +8,7 @@ const statuses = {
   RESOLVED: "Case closed",
 };
 const stages = { INQUIRY: "Inquiry stage", CHARGEBACK: "Claim stage" };
+const deadlines = { WAITING_FOR_SELLER_RESPONSE: "Seller must respond by", WAITING_FOR_BUYER_RESPONSE: "You must respond by" };
 
 export default function Tracker({ c, currency, onResolve, busy }) {
   const won = ["RESOLVED_BUYER_FAVOUR", "ACCEPTED"].includes(c.outcome);
@@ -36,7 +37,7 @@ export default function Tracker({ c, currency, onResolve, busy }) {
               {lost ? "Seller won" : statuses[c.status] || c.status}
             </span>
           </div>
-          {c.dueDate && !c.outcome && <p className="text-paper">Next deadline: <span className="text-amber">{day(c.dueDate)}</span></p>}
+          {c.dueDate && !c.outcome && <p className="text-paper">{deadlines[c.status] || "Next deadline:"} <span className="text-amber">{day(c.dueDate)}</span></p>}
         </div>
       )}
 
