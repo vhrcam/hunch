@@ -7,10 +7,10 @@ export default function Steps({ current }) {
         const n = i + 1;
         const state = n < current ? "done" : n === current ? "now" : "next";
         return (
-          <li key={label} className="space-y-2">
-            <div className={`h-1 rounded-full ${state === "next" ? "bg-line" : "bg-amber"}`} />
-            <p className={`font-type text-xs sm:text-sm ${state === "now" ? "text-amber" : state === "done" ? "text-paper" : "text-muted opacity-50"}`}>
-              {state === "done" ? "✓" : n} {label}
+          <li key={label} className="space-y-2.5">
+            <div className={`h-0.5 rounded-full ${state === "now" ? "bg-paper" : state === "done" ? "bg-muted" : "bg-line"}`} />
+            <p className={`font-mono text-[0.68rem] uppercase tracking-wider ${state === "now" ? "text-paper" : state === "done" ? "text-muted" : "text-faint"}`}>
+              {state === "done" ? "✓" : `0${n}`} {label}
             </p>
           </li>
         );
