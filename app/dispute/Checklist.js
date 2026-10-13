@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Detective from "../Detective";
 
 export default function Checklist({ steps, note }) {
   const [step, setStep] = useState(0);
@@ -11,14 +12,17 @@ export default function Checklist({ steps, note }) {
   }, [steps]);
 
   return (
-    <div className="card space-y-3">
-      {steps.map((s, i) => (
-        <p key={s} className={`font-type flex gap-3 ${i < step ? "text-muted" : i === step ? "text-amber animate-pulse" : "text-muted opacity-30"}`}>
-          <span className="w-4">{i < step ? "✓" : i === step ? "›" : "·"}</span>
-          {s}{i === step && "..."}
-        </p>
-      ))}
-      {note && <p className="text-muted text-sm pt-2">{note}</p>}
+    <div className="card flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-10">
+      <Detective size={96} searching className="text-paper shrink-0 self-center" />
+      <div className="flex-1 space-y-2.5">
+        {steps.map((s, i) => (
+          <p key={s} className={`flex gap-3 text-sm ${i < step ? "text-muted" : i === step ? "text-paper" : "text-faint"}`}>
+            <span className="font-mono w-4 shrink-0">{i < step ? "✓" : i === step ? "›" : "·"}</span>
+            <span className={i === step ? "animate-pulse" : ""}>{s}{i === step && "..."}</span>
+          </p>
+        ))}
+        {note && <p className="text-faint text-xs pt-2">{note}</p>}
+      </div>
     </div>
   );
 }
