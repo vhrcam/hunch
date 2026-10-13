@@ -1,5 +1,11 @@
 import { paypal } from "@/lib/paypal";
 
+const friendly = {
+  TRANSACTION_NOT_ELIGIBLE: "PayPal says this payment can't be disputed. Check the transaction ID, and that it was a goods-and-services payment without an open case.",
+  INVALID_BUYER_TRANSACTION_ID: "PayPal couldn't find that transaction ID. Copy it again from the payment's details.",
+  MISSING_OR_INVALID_REQUEST_BODY: "PayPal couldn't match that transaction to your account. Check the transaction ID.",
+};
+
 export async function POST(request) {
   const { transactionId, reason, amount, description } = await request.json();
   const extensions = { merchant_contacted: true, merchant_contacted_outcome: "NO_RESPONSE" };
@@ -16,6 +22,9 @@ export async function POST(request) {
     },
   });
   const disputeId = res.links?.find((l) => l.rel === "self")?.href.split("/").pop();
-  if (!disputeId) return Response.json({ error: res.message || res.error_description || "PayPal didn't accept the dispute", details: res.details }, { status: 400 });
+  if (!disputeId) {
+    const issue = res.details?.[0]?.issue;
+    return Response.json({ error: friendly[issue] || res.details?.[0]?.description || "PayPal didn't accept the dispute. Try again in a moment." }, { status: 400 });
+  }
   return Response.json({ disputeId });
 }
