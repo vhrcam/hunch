@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
         <footer className="border-t border-line">
           <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between label">
             <span>Hunch · PayPal AI Hackathon</span>
-            <span>Sandbox · no real money moves</span>
+            <span className="hidden sm:inline">Sandbox · no real money moves</span>
           </div>
         </footer>
       </body>
