@@ -10,7 +10,7 @@ const statuses = {
 const stages = { INQUIRY: "Inquiry stage", CHARGEBACK: "Claim stage" };
 const deadlines = { WAITING_FOR_SELLER_RESPONSE: "Seller must respond by", WAITING_FOR_BUYER_RESPONSE: "You must respond by" };
 
-export default function Tracker({ c, currency, onResolve, busy }) {
+export default function Tracker({ c, currency, asked, onResolve, onRefresh, busy }) {
   const won = ["RESOLVED_BUYER_FAVOUR", "ACCEPTED"].includes(c.outcome);
   const lost = ["RESOLVED_SELLER_FAVOUR", "DENIED"].includes(c.outcome);
 
@@ -66,11 +66,23 @@ export default function Tracker({ c, currency, onResolve, busy }) {
         </ol>
       </div>
 
-      {!c.outcome && (
+      {!c.outcome && !asked && (
         <div className="border border-dashed border-line rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
           <p className="text-muted text-sm">Sandbox only: PayPal takes days to rule on a real case.</p>
           <button onClick={onResolve} disabled={busy} className="text-sm text-amber border border-amber rounded-full px-4 py-1.5 disabled:opacity-50">
-            {busy ? "Waiting on PayPal..." : "Demo: simulate PayPal's decision"}
+            {busy === "resolve" ? "Waiting on PayPal..." : "Demo: simulate PayPal's decision"}
+          </button>
+        </div>
+      )}
+
+      {!c.outcome && asked && (
+        <div className="border border-dashed border-amber rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="font-type text-amber animate-pulse">PayPal is reviewing...</p>
+            <p className="text-muted text-sm">The sandbox takes a few minutes between steps. Check back for the ruling.</p>
+          </div>
+          <button onClick={onRefresh} disabled={busy} className="text-sm text-amber border border-amber rounded-full px-4 py-1.5 disabled:opacity-50">
+            {busy === "refresh" ? "Checking..." : "Refresh"}
           </button>
         </div>
       )}

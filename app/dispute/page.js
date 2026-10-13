@@ -37,6 +37,7 @@ export default function Dispute() {
   const [description, setDescription] = useState("");
   const [checked, setChecked] = useState([]);
   const [status, setStatus] = useState(null);
+  const [asked, setAsked] = useState(false);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState("");
 
@@ -77,7 +78,12 @@ export default function Dispute() {
     setStep(4);
   });
 
-  const resolve = () => run("resolve", async () => setStatus(await api("resolve", { disputeId: status.disputeId })));
+  const resolve = () => run("resolve", async () => {
+    setStatus(await api("resolve", { disputeId: status.disputeId }));
+    setAsked(true);
+  });
+
+  const refresh = () => run("refresh", async () => setStatus(await api(`status?id=${status.disputeId}`)));
 
   const usePayment = (t) => {
     setPicked(t);
@@ -209,7 +215,7 @@ export default function Dispute() {
         </div>
       )}
 
-      {step === 4 && status && <Tracker c={status} currency={picked.currency} onResolve={resolve} busy={loading === "resolve"} />}
+      {step === 4 && status && <Tracker c={status} currency={picked.currency} asked={asked} onResolve={resolve} onRefresh={refresh} busy={loading} />}
 
       {error && <p className="text-danger">{error}</p>}
     </div>
