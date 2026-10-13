@@ -93,8 +93,6 @@ export default function Dispute() {
 
       <Steps current={step} />
 
-      {error && <p className="text-danger">{error}</p>}
-
       {step === 1 && (
         <div className="space-y-4">
           <p className="font-type text-paper text-xl">Which payment went wrong?</p>
@@ -209,6 +207,8 @@ export default function Dispute() {
       )}
 
       {step === 4 && status && <Tracker c={status} currency={picked.currency} onResolve={resolve} busy={loading === "resolve"} />}
+
+      {error && <p className="text-danger">{error}</p>}
     </div>
   );
 }
