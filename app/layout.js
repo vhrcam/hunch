@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
               Sandbox mode
             </span>
             <span className="md:hidden mr-auto" />
-            <Link href="/#how" className="hidden sm:inline text-muted hover:text-paper transition-colors">How it works</Link>
+            <Link href="/how" className="hidden sm:inline text-muted hover:text-paper transition-colors">How it works</Link>
             <Link href="/vet" className="text-muted hover:text-paper transition-colors"><span className="sm:hidden">Vet</span><span className="hidden sm:inline">Vet a seller</span></Link>
             <Link href="/dispute" className="text-muted hover:text-paper transition-colors"><span className="sm:hidden">Dispute</span><span className="hidden sm:inline">File a dispute</span></Link>
             <a href="https://github.com/vhrcam/hunch" target="_blank" rel="noreferrer" aria-label="GitHub" className="text-muted hover:text-paper transition-colors">
