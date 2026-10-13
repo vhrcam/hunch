@@ -27,7 +27,7 @@ export default function ManualEntry({ onSubmit }) {
         <label className="space-y-1 sm:col-span-2">
           <span className="text-sm text-muted">Transaction ID</span>
           <input className="input font-mono uppercase" value={f.id} onChange={set("id")} maxLength={17} placeholder="9VX12345AB6789012" />
-          <span className={`block text-xs ${f.id && !validId ? "text-danger" : "text-muted"}`}>
+          <span className={`block text-xs ${f.id && !validId ? "text-danger" : "text-faint"}`}>
             17 letters and numbers. It&apos;s on your PayPal receipt email and in Activity.
           </span>
         </label>
@@ -40,11 +40,11 @@ export default function ManualEntry({ onSubmit }) {
           <input className="input" value={f.paidTo} onChange={set("paidTo")} placeholder="Seller name or email" />
         </label>
         <label className="space-y-1">
-          <span className="text-sm text-muted">Date <span className="opacity-60">(optional)</span></span>
+          <span className="text-sm text-muted">Date <span className="text-faint">(optional)</span></span>
           <input className="input" type="date" value={f.date} onChange={set("date")} />
         </label>
         <label className="space-y-1">
-          <span className="text-sm text-muted">What it was for <span className="opacity-60">(optional)</span></span>
+          <span className="text-sm text-muted">What it was for <span className="text-faint">(optional)</span></span>
           <input className="input" value={f.note} onChange={set("note")} placeholder="Nintendo Switch OLED" />
         </label>
       </div>
