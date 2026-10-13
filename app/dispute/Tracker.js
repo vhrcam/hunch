@@ -20,7 +20,7 @@ export default function Tracker({ c, currency, onResolve, busy }) {
           <p className="font-type text-muted">Case #{c.disputeId}</p>
           <div className="stamp text-safe px-6 py-4 leading-tight space-y-2 transition duration-700 ease-out starting:scale-150 starting:opacity-0">
             <p className="text-2xl sm:text-4xl">Case closed</p>
-            <p className="text-3xl sm:text-5xl text-paper">{money(c.amount, currency)} refunded</p>
+            <p className="text-3xl sm:text-5xl text-paper">{money(c.refunded || c.amount, currency)} refunded</p>
           </div>
           <p className="text-muted">PayPal ruled in your favor. The money goes back to your account.</p>
         </div>
