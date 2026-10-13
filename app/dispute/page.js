@@ -98,34 +98,32 @@ export default function Dispute() {
 
       <Steps current={step} />
 
-      {step === 1 && (
-        <div className="space-y-4">
-          <p className="font-type text-paper text-xl">Which payment went wrong?</p>
-          {!transactions && <p className="font-type text-muted animate-pulse">Pulling your recent payments...</p>}
-          {noList && <p className="text-muted">No recent payments showed up from PayPal yet. Enter the payment yourself and Hunch takes it from there.</p>}
-          {transactions?.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setPicked(t)}
-              className={`card w-full text-left flex items-start justify-between gap-4 hover:border-amber! ${picked?.id === t.id ? "border-amber! ring-1 ring-amber" : ""}`}
-            >
-              <div className="space-y-1 min-w-0">
-                <p className="font-semibold text-paper">{t.counterparty}</p>
-                <p className="text-muted text-sm truncate">{[t.date && day(t.date), t.email].filter(Boolean).join(" · ")}</p>
-                {t.note && <p className="text-muted text-sm italic">&ldquo;{t.note}&rdquo;</p>}
-              </div>
-              <p className="font-type text-2xl text-paper shrink-0">{money(t.amount, t.currency)}</p>
-            </button>
-          ))}
-          {transactions?.length > 0 && <button className="btn" disabled={!picked} onClick={() => go(2)}>Continue</button>}
-          {transactions?.length > 0 && (
-            <button onClick={() => setManual(!manual)} className="block text-sm text-muted hover:text-amber pt-2">
-              Don&apos;t see it? Enter it yourself {manual ? "▴" : "▾"}
-            </button>
-          )}
-          {(manual || noList) && <ManualEntry onSubmit={usePayment} />}
-        </div>
-      )}
+      <div hidden={step !== 1} className="space-y-4">
+        <p className="font-type text-paper text-xl">Which payment went wrong?</p>
+        {!transactions && <p className="font-type text-muted animate-pulse">Pulling your recent payments...</p>}
+        {noList && <p className="text-muted">No recent payments showed up from PayPal yet. Enter the payment yourself and Hunch takes it from there.</p>}
+        {transactions?.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setPicked(t)}
+            className={`card w-full text-left flex items-start justify-between gap-4 hover:border-amber! ${picked?.id === t.id ? "border-amber! ring-1 ring-amber" : ""}`}
+          >
+            <div className="space-y-1 min-w-0">
+              <p className="font-semibold text-paper">{t.counterparty}</p>
+              <p className="text-muted text-sm truncate">{[t.date && day(t.date), t.email].filter(Boolean).join(" · ")}</p>
+              {t.note && <p className="text-muted text-sm italic">&ldquo;{t.note}&rdquo;</p>}
+            </div>
+            <p className="font-type text-2xl text-paper shrink-0">{money(t.amount, t.currency)}</p>
+          </button>
+        ))}
+        {transactions?.length > 0 && <button className="btn" disabled={!picked} onClick={() => go(2)}>Continue</button>}
+        {transactions?.length > 0 && (
+          <button onClick={() => setManual(!manual)} className="block text-sm text-muted hover:text-amber pt-2">
+            Don&apos;t see it? Enter it yourself {manual ? "▴" : "▾"}
+          </button>
+        )}
+        {(manual || noList) && <ManualEntry onSubmit={usePayment} />}
+      </div>
 
       {step === 2 && (
         <form onSubmit={build} className="space-y-4">
