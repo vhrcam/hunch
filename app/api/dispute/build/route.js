@@ -34,13 +34,17 @@ const schema = {
 
 export async function POST(request) {
   const { transaction, story } = await request.json();
+  const date = transaction.date
+    ? new Date(`${transaction.date}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })
+    : "unknown";
+  const amount = transaction.currency === "USD" ? `$${transaction.amount}` : `${transaction.amount} ${transaction.currency}`;
 
   const prompt = `You help a PayPal buyer file a dispute. Build their case from the payment and their story.
 
 Payment:
-- Paid to: ${transaction.counterparty} (${transaction.email})
-- Amount: ${transaction.amount} ${transaction.currency}
-- Date: ${transaction.date}
+- Paid to: ${[transaction.counterparty, transaction.email].filter(Boolean).join(", ") || "unknown"}
+- Amount: ${amount}
+- Date: ${date}
 - Note on the payment: ${transaction.note || "none"}
 
 What the buyer says happened:
