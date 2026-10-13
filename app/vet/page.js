@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const examples = [
   "PS5 brand new sealed, $80 today only! Pay with friends and family to paypal.me/dealzking2026",
   "https://www.adafruit.com",
 ];
+
+const steps = ["Pulling domain records...", "Reading the seller's site...", "Checking for pressure tactics...", "Comparing the price...", "Weighing the clues..."];
 
 const stamp = { safe: "Looks legit", caution: "Be careful", danger: "Don't pay" };
 const color = { safe: "text-safe", caution: "text-amber", danger: "text-danger" };
@@ -14,13 +16,27 @@ export default function Vet() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(0);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!loading) return;
+    const id = setInterval(() => setStep((s) => Math.min(s + 1, steps.length - 1)), 4000);
+    return () => clearInterval(id);
+  }, [loading]);
 
   async function investigate(e) {
     e.preventDefault();
     setLoading(true);
     setResult(null);
-    const res = await fetch("/api/vet", { method: "POST", body: JSON.stringify({ input }) });
-    setResult(await res.json());
+    setError("");
+    setStep(0);
+    try {
+      const res = await fetch("/api/vet", { method: "POST", body: JSON.stringify({ input }) });
+      setResult(await res.json());
+    } catch {
+      setError("The investigation hit a snag. Try again.");
+    }
     setLoading(false);
   }
 
@@ -44,6 +60,15 @@ export default function Vet() {
           ))}
         </div>
       </form>
+
+      {loading && (
+        <div className="card space-y-2">
+          <p className="font-type text-amber animate-pulse">{steps[step]}</p>
+          <p className="text-muted text-sm">This can take up to a minute when the AI is busy.</p>
+        </div>
+      )}
+
+      {error && <p className="text-danger">{error}</p>}
 
       {result && (
         <div className="space-y-6">
