@@ -16,7 +16,7 @@ Fill in:
 - business: "known" or "unknown", with businessNote (one sentence on what you know about them, or why you can't say).
 - scamReports: true only if you know of real scam reports about this exact seller or site, with scamNote.
 - item, askingPrice and marketPrice (typical US price for that item in that condition). Use null when there's no item or price.
-- verdict: 2-3 plain sentences to the buyer, direct like a detective. Name the strongest clues, say plainly what couldn't be checked, and end with a clear call: pay, be careful, or don't pay.`;
+- verdict: 2-3 plain sentences to the buyer, direct like a detective. Never say "I". Name the strongest clues, say plainly what couldn't be checked, and end with a clear call: pay, be careful, or don't pay.`;
 
 const schema = {
   type: "object",
