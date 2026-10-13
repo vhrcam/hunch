@@ -62,7 +62,7 @@ export default function Home() {
         </Link>
       </section>
 
-      <section className="border-t border-line pt-12 grid md:grid-cols-3 gap-8">
+      <section id="how" className="border-t border-line pt-12 grid md:grid-cols-3 gap-8 scroll-mt-20">
         <div className="md:col-span-1">
           <p className="label">How it works</p>
           <h2 className="headline text-3xl mt-2">A tool, not an agent.</h2>
