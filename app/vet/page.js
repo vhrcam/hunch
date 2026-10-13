@@ -3,6 +3,12 @@
 import { useState } from "react";
 import Checklist from "../dispute/Checklist";
 
+const kinds = [
+  ["PayPal.me link", <path key="i" d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" />],
+  ["Store website", <><circle key="c" cx="12" cy="12" r="9" /><path key="p" d="M3 12h18M12 3c2.5 2.7 3.5 5.7 3.5 9s-1 6.3-3.5 9c-2.5-2.7-3.5-5.7-3.5-9s1-6.3 3.5-9Z" /></>],
+  ["Seller's message", <path key="i" d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z" />],
+];
+
 const examples = [
   { label: "Too-good PS5", text: "PS5 brand new sealed, $80 today only! Pay with friends and family to paypal.me/dealzking2026" },
   { label: "Real store", text: "https://www.adafruit.com" },
@@ -43,7 +49,16 @@ export default function Vet() {
       </div>
 
       <form onSubmit={investigate} className="card space-y-4">
-        <textarea className="input h-32" value={input} onChange={(e) => setInput(e.target.value)} placeholder="paypal.me/seller, https://shop.example, or the seller's message" />
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <span className="label">You can paste</span>
+          {kinds.map(([name, icon]) => (
+            <span key={name} className="inline-flex items-center gap-1.5 text-sm text-muted">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{icon}</svg>
+              {name}
+            </span>
+          ))}
+        </div>
+        <textarea className="input h-32 resize-none" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Paste a link or the seller's message here…" />
         <div className="flex flex-wrap items-center gap-3">
           <button className="btn mr-auto" disabled={loading || !input.trim()}>{loading ? "Investigating..." : "Investigate"}</button>
           <div className="flex items-center gap-2">
