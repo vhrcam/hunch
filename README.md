@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Hunch
 
-## Getting Started
+**Your PayPal scam detective.** Check a seller before you pay, and if a purchase goes wrong, Hunch builds and files your PayPal dispute so you can get your money back.
 
-First, run the development server:
+Built for the PayPal AI Hackathon.
+
+## Two modes, one mission
+
+### 🔍 Before you pay: Vet a seller
+Paste a seller link, a PayPal.me link, or the payment request itself. Hunch investigates:
+
+- **Domain age** from public RDAP records (a store that's 4 days old is a red flag)
+- **The seller's page**: HTTPS, contact details, social links, business info
+- **Scam patterns**: too-good-to-be-true prices, pressure tactics, and risky payment requests like Friends and Family, gift cards, or crypto
+- **An AI read** on whether the business is known and what the item normally costs
+
+You get a 0–100 trust score, a stamped verdict, and a plain-language explanation of every clue, plus a list of anything Hunch couldn't check.
+
+### 🛡️ After it goes wrong: File a dispute
+Describe what happened in your own words. Hunch:
+
+1. Finds the payment in your PayPal activity, or takes the transaction ID
+2. Picks the right PayPal dispute category
+3. Writes a calm, factual case description you can edit
+4. Lists exactly what evidence to attach and why it helps
+5. Files the dispute through PayPal's Disputes API
+6. Tracks the case and coaches you on what to do next, until it's closed
+
+## It's a tool, not an agent
+
+Hunch investigates and drafts, but you make the call. Nothing is filed or sent without you pressing the button.
+
+## How it works
+
+| Piece | What it does |
+|---|---|
+| **Next.js** (App Router) + **Tailwind CSS** | The app and its API routes |
+| **Google Gemini** | Scam verdicts, dispute case writing, and next-step coaching |
+| **PayPal Disputes API** | Files disputes, reads case status, and tracks outcomes |
+| **PayPal Transaction Search API** | Lists recent payments to dispute |
+| **RDAP** | Looks up how long a website's domain has existed |
+
+Everything runs against the **PayPal sandbox**, so no real money moves.
+
+## Run it locally
+
+You need Node.js 20+, a free [Gemini API key](https://aistudio.google.com), and a [PayPal developer](https://developer.paypal.com) account.
+
+```bash
+git clone https://github.com/vhrcam/hunch.git
+cd hunch
+npm install
+cp .env.example .env.local
+```
+
+Fill in `.env.local`:
+
+| Variable | Where it comes from |
+|---|---|
+| `GEMINI_API_KEY` | Google AI Studio → Get API key |
+| `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` | A sandbox REST app for the buyer's account, with **Transaction search** enabled |
+| `SELLER_PAYPAL_CLIENT_ID` / `SELLER_PAYPAL_CLIENT_SECRET` | A second sandbox app for the seller's account, used only by the demo's "simulate PayPal's decision" button |
+
+Then start it:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Trying a dispute in the sandbox
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. On [sandbox.paypal.com](https://www.sandbox.paypal.com), log in as the buyer's sandbox account and send a payment to the seller's sandbox account as **paying for an item or service**.
+2. In Hunch, go to **File a dispute**, pick the payment (or enter its transaction ID), and describe what happened.
+3. Review the case and file it.
+4. After a few minutes, use **Demo: simulate PayPal's decision** to play out the seller's side. PayPal's sandbox takes a few minutes per step, so use **Refresh** until the case closes.
 
-## Learn More
+Each payment can only be disputed once.
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[MIT](LICENSE)
