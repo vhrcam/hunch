@@ -1,28 +1,37 @@
 import { findLink, domainAge, readPage, patterns } from "./checks";
 
 const prompt = (input, link, page, clues) => `You are Hunch, a scam detective helping someone decide whether to pay a seller with PayPal.
-Use Google Search to check this seller. Look for: a real registered business or real presence (reviews, social accounts, news, business listings), scam reports or complaints, and the typical market price of the item.
+Use what you already know. You can't browse the web, so never claim you searched. Only call a business "known" if you genuinely recognize it as an established, real business. A small or new seller you've never heard of is "unknown", not a scam.
 
 What the user pasted:
 """${input}"""
 
 Link: ${link?.url || "none"}
-${page ? `Page title: ${page.title}\nPage text: ${page.text.slice(0, 2500)}` : "The page could not be loaded."}
+${page ? `Page title: ${page.title}\nPage text: ${page.text.slice(0, 2500)}` : "No page text."}
 
 Clues found so far:
-${clues.map((c) => `- ${c.label}: ${c.detail}`).join("\n")}
+${clues.map((c) => `- ${c.label}: ${c.detail}`).join("\n") || "- none"}
 
-Reply with JSON in this shape:
-{
-  "business": "found" | "not_found" | "unknown",
-  "businessNote": "one sentence on what you found about the business or seller",
-  "scamReports": true | false,
-  "scamNote": "one sentence, or empty",
-  "item": "the item for sale, or empty",
-  "askingPrice": number or null,
-  "marketPrice": number or null,
-  "verdict": "2-3 plain sentences to the buyer. Be direct, like a detective. Name the strongest clues. Say plainly if something important couldn't be checked. End with a clear call: pay, be careful, or don't pay."
-}`;
+Fill in:
+- business: "known" or "unknown", with businessNote (one sentence on what you know about them, or why you can't say).
+- scamReports: true only if you know of real scam reports about this exact seller or site, with scamNote.
+- item, askingPrice and marketPrice (typical US price for that item in that condition). Use null when there's no item or price.
+- verdict: 2-3 plain sentences to the buyer, direct like a detective. Name the strongest clues, say plainly what couldn't be checked, and end with a clear call: pay, be careful, or don't pay.`;
+
+const schema = {
+  type: "object",
+  properties: {
+    business: { type: "string", enum: ["known", "unknown"] },
+    businessNote: { type: "string" },
+    scamReports: { type: "boolean" },
+    scamNote: { type: "string" },
+    item: { type: "string" },
+    askingPrice: { type: ["number", "null"] },
+    marketPrice: { type: ["number", "null"] },
+    verdict: { type: "string" },
+  },
+  required: ["business", "businessNote", "scamReports", "scamNote", "item", "askingPrice", "marketPrice", "verdict"],
+};
 
 export async function POST(request) {
   const { input } = await request.json();
@@ -72,21 +81,20 @@ export async function POST(request) {
   if (process.env.GEMINI_API_KEY) {
     try {
       const { askJSON } = await import("@/lib/ai");
-      const ai = await askJSON(prompt(input, link, page, clues), { search: true });
-      if (ai.business === "found") clues.push({ label: "Real presence", detail: ai.businessNote, impact: 10 });
-      if (ai.business === "not_found") clues.push({ label: "No web presence", detail: ai.businessNote, impact: -15 });
-      if (ai.business === "unknown") unchecked.push("Business registration");
-      if (ai.scamReports) clues.push({ label: "Scam reports", detail: ai.scamNote, impact: -25 });
+      const ai = await askJSON(prompt(input, link, page, clues), { schema });
+      if (ai.business === "known") clues.push({ label: "Known business", detail: `From what Hunch knows: ${ai.businessNote}`, impact: 10 });
+      else unchecked.push("Business registration and web presence (Hunch doesn't know this seller)");
+      if (ai.scamReports) clues.push({ label: "Scam reports", detail: `From what Hunch knows: ${ai.scamNote}`, impact: -25 });
       if (ai.askingPrice && ai.marketPrice) {
         const ratio = ai.askingPrice / ai.marketPrice;
-        clues.push({ label: "Price check", detail: `$${ai.askingPrice} for ${ai.item || "this"}, which usually sells for about $${ai.marketPrice}.`, impact: ratio < 0.5 ? -25 : ratio < 0.75 ? -10 : 0 });
+        clues.push({ label: "Price check", detail: `$${ai.askingPrice} for ${ai.item || "this"}. From what Hunch knows, it usually sells for about $${ai.marketPrice}.`, impact: ratio < 0.5 ? -25 : ratio < 0.75 ? -10 : 0 });
       }
       verdict = ai.verdict;
     } catch {
-      unchecked.push("AI web search (try again in a minute)");
+      unchecked.push("AI review (Gemini is busy, try again in a minute)");
     }
   } else {
-    unchecked.push("AI web search (no Gemini key yet)", "Business registration", "Market price");
+    unchecked.push("AI review (no Gemini key yet)", "Business registration and web presence", "Market price");
   }
 
   const score = Math.max(0, Math.min(100, 60 + clues.reduce((sum, c) => sum + c.impact, 0)));
