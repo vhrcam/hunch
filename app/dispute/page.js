@@ -55,6 +55,11 @@ export default function Dispute() {
     setLoading(null);
   }
 
+  const go = (n) => {
+    setStep(n);
+    setError("");
+  };
+
   const build = (e) => {
     e.preventDefault();
     run("build", async () => {
@@ -76,7 +81,7 @@ export default function Dispute() {
 
   const usePayment = (t) => {
     setPicked(t);
-    setStep(2);
+    go(2);
   };
 
   const noList = transactions?.length === 0;
@@ -112,7 +117,7 @@ export default function Dispute() {
               <p className="font-type text-2xl text-paper shrink-0">{money(t.amount, t.currency)}</p>
             </button>
           ))}
-          {transactions?.length > 0 && <button className="btn" disabled={!picked} onClick={() => setStep(2)}>Continue</button>}
+          {transactions?.length > 0 && <button className="btn" disabled={!picked} onClick={() => go(2)}>Continue</button>}
           {transactions?.length > 0 && (
             <button onClick={() => setManual(!manual)} className="block text-sm text-muted hover:text-amber pt-2">
               Don&apos;t see it? Enter it yourself {manual ? "▴" : "▾"}
@@ -142,7 +147,7 @@ export default function Dispute() {
               </div>
               <div className="flex items-center gap-4">
                 <button className="btn" disabled={!story.trim()}>Build my case</button>
-                <button type="button" onClick={() => setStep(1)} className="text-muted text-sm hover:text-amber">Back</button>
+                <button type="button" onClick={() => go(1)} className="text-muted text-sm hover:text-amber">Back</button>
               </div>
             </div>
           )}
@@ -200,7 +205,7 @@ export default function Dispute() {
           ) : (
             <div className="flex items-center gap-4">
               <button className="btn" disabled={!description.trim()} onClick={file}>File dispute with PayPal</button>
-              <button onClick={() => setStep(2)} className="text-muted text-sm hover:text-amber">Back</button>
+              <button onClick={() => go(2)} className="text-muted text-sm hover:text-amber">Back</button>
             </div>
           )}
         </div>
