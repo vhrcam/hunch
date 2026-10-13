@@ -3,13 +3,15 @@ import { money, day } from "./format";
 const statuses = {
   OPEN: "Case open",
   WAITING_FOR_SELLER_RESPONSE: "Waiting on seller",
+  WAITING_FOR_BUYER_RESPONSE: "Your move",
   UNDER_REVIEW: "Under review",
+  RESOLVED: "Case closed",
 };
 const stages = { INQUIRY: "Inquiry stage", CHARGEBACK: "Claim stage" };
 
 export default function Tracker({ c, currency, onResolve, busy }) {
-  const won = c.outcome === "RESOLVED_BUYER_FAVOUR";
-  const lost = c.outcome === "RESOLVED_SELLER_FAVOUR";
+  const won = ["RESOLVED_BUYER_FAVOUR", "ACCEPTED"].includes(c.outcome);
+  const lost = ["RESOLVED_SELLER_FAVOUR", "DENIED"].includes(c.outcome);
 
   return (
     <div className="space-y-6">
