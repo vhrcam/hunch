@@ -18,10 +18,13 @@ const fileSteps = ["Opening the case with PayPal", "Attaching your statement", "
 
 const strengthColor = { strong: "text-safe", fair: "text-amber", weak: "text-danger" };
 
+const offline = "That didn't go through. Try again in a moment.";
+
 async function api(path, body) {
   const res = await fetch(`/api/dispute/${path}`, body ? { method: "POST", body: JSON.stringify(body) } : {});
-  if (!res.ok) throw new Error();
-  return res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || offline);
+  return data;
 }
 
 export default function Dispute() {
@@ -46,8 +49,8 @@ export default function Dispute() {
     setError("");
     try {
       await work();
-    } catch {
-      setError("PayPal didn't answer. Try again in a moment.");
+    } catch (e) {
+      setError(e instanceof TypeError ? offline : e.message);
     }
     setLoading(null);
   }
