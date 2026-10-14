@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 
-const tones = { safe: "text-safe", caution: "text-amber", danger: "text-danger" };
+const tones = { safe: "text-safe", caution: "text-amber", danger: "text-danger", neutral: "text-muted" };
 
 export default function Seal({ level, ring, label, size = 136 }) {
   const id = useId().replace(/:/g, "");

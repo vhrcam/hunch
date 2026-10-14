@@ -1,4 +1,12 @@
 import { askJSON } from "@/lib/ai";
+import { result } from "../../dispute/outcome";
+
+const closings = {
+  won: "Case closed in your favor",
+  lost: "Case closed in the seller's favor",
+  withdrawn: "You withdrew the dispute",
+  closed: "PayPal closed the case",
+};
 
 const coachSchema = {
   type: "object",
@@ -26,7 +34,7 @@ export async function caseStatus(d) {
   for (const m of d.messages || []) timeline.push({ date: m.time_posted, event: `${m.posted_by === "BUYER" ? "You" : "Seller"}: ${m.content}` });
   if (d.seller_response_due_date) timeline.push({ date: d.seller_response_due_date, event: "Seller's deadline to respond" });
   for (const a of d.adjudications || []) timeline.push({ date: a.adjudication_time, event: `PayPal reviewed the case (${a.type.toLowerCase().replaceAll("_", " ")})` });
-  if (outcome) timeline.push({ date: d.update_time, event: outcome.includes("BUYER") ? "Case closed in your favor" : "Case closed in the seller's favor" });
+  if (outcome) timeline.push({ date: d.update_time, event: closings[result(outcome)] });
   timeline.sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const { coach } = await askJSON(

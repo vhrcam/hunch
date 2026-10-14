@@ -1,5 +1,6 @@
 import Detective from "../Detective";
 import CaseClosed from "./CaseClosed";
+import { result } from "./outcome";
 import { money, day } from "./format";
 
 export const statuses = {
@@ -18,12 +19,13 @@ function ago(date) {
 }
 
 export function StatusPill({ status, outcome, since }) {
-  const won = ["RESOLVED_BUYER_FAVOUR", "ACCEPTED"].includes(outcome);
-  const lost = ["RESOLVED_SELLER_FAVOUR", "DENIED"].includes(outcome);
+  const kind = result(outcome);
+  const won = kind === "won";
+  const lost = kind === "lost";
   const yourMove = status === "WAITING_FOR_BUYER_RESPONSE";
-  const label = won ? "Won" : lost ? "Seller won" : statuses[status] || status;
-  const tone = won ? "text-safe" : lost ? "text-danger" : yourMove ? "text-amber" : "text-text";
-  const dot = won ? "bg-safe" : lost ? "bg-danger" : yourMove ? "bg-amber animate-pulse" : "bg-paper animate-pulse";
+  const label = won ? "Won" : lost ? "Refund denied" : kind === "withdrawn" ? "Withdrawn" : kind ? "Closed" : statuses[status] || status;
+  const tone = won ? "text-safe" : lost ? "text-danger" : kind ? "text-muted" : yourMove ? "text-amber" : "text-text";
+  const dot = won ? "bg-safe" : lost ? "bg-danger" : kind ? "bg-muted" : yourMove ? "bg-amber animate-pulse" : "bg-paper animate-pulse";
 
   return (
     <span className={`inline-flex items-center gap-2 rounded-full border border-line-strong bg-raised px-3 py-1 text-xs whitespace-nowrap ${tone}`}>
@@ -59,14 +61,13 @@ function Progress({ c, yourMove }) {
 }
 
 export default function Tracker({ c, currency, asked, onResolve, onRefresh, busy, children }) {
-  const won = ["RESOLVED_BUYER_FAVOUR", "ACCEPTED"].includes(c.outcome);
   const yourMove = c.status === "WAITING_FOR_BUYER_RESPONSE";
 
   return (
     <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-4 items-start">
       <div className="space-y-4">
         {c.outcome ? (
-          <CaseClosed c={c} currency={currency} won={won} />
+          <CaseClosed c={c} currency={currency} />
         ) : (
           <div className="card space-y-5">
             <div className="flex flex-wrap items-start justify-between gap-4">
