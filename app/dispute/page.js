@@ -110,20 +110,22 @@ export default function Dispute() {
         <h2 className="headline text-2xl">Which payment went wrong?</h2>
         {!transactions && <p className="text-muted text-sm animate-pulse">Pulling your recent payments...</p>}
         {noList && <p className="text-muted">No recent payments showed up from PayPal yet. Enter the payment yourself and Hunch takes it from there.</p>}
-        {transactions?.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setPicked(t)}
-            className={`card w-full text-left flex items-start justify-between gap-4 hover:border-line-strong! ${picked?.id === t.id ? "border-paper! ring-1 ring-paper" : ""}`}
-          >
-            <div className="space-y-1 min-w-0">
-              <p className="font-medium text-paper">{t.counterparty}</p>
-              <p className="text-muted text-sm truncate">{[t.date && day(t.date), t.email].filter(Boolean).join(" · ")}</p>
-              {t.note && <p className="text-muted text-sm italic">&ldquo;{t.note}&rdquo;</p>}
-            </div>
-            <p className="font-mono text-lg text-paper shrink-0">{money(t.amount, t.currency)}</p>
-          </button>
-        ))}
+        <div className="grid lg:grid-cols-2 gap-3">
+          {transactions?.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setPicked(t)}
+              className={`card w-full text-left flex items-start justify-between gap-4 hover:border-line-strong! ${picked?.id === t.id ? "border-paper! ring-1 ring-paper" : ""}`}
+            >
+              <div className="space-y-1 min-w-0">
+                <p className="font-medium text-paper">{t.counterparty}</p>
+                <p className="text-muted text-sm truncate">{[t.date && day(t.date), t.email].filter(Boolean).join(" · ")}</p>
+                {t.note && <p className="text-muted text-sm italic">&ldquo;{t.note}&rdquo;</p>}
+              </div>
+              <p className="font-mono text-lg text-paper shrink-0">{money(t.amount, t.currency)}</p>
+            </button>
+          ))}
+        </div>
         {transactions?.length > 0 && <button className="btn" disabled={!picked} onClick={() => go(2)}>Continue</button>}
         {transactions?.length > 0 && (
           <button onClick={() => setManual(!manual)} className="block text-sm text-muted transition-colors hover:text-paper pt-2">
@@ -162,49 +164,55 @@ export default function Dispute() {
 
       {step === 3 && (
         <div className="space-y-6">
-          <div className="card space-y-4">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="space-y-1">
-                <p className="label">Dispute category</p>
-                <p className="headline text-3xl">{built.reasonLabel}</p>
-                <p className="text-muted text-sm">Claiming {money(built.amount, picked.currency)} from {picked.counterparty}</p>
+          <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-4 items-start">
+            <div className="space-y-4">
+              <div className="card space-y-4">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <p className="label">Dispute category</p>
+                    <p className="headline text-3xl">{built.reasonLabel}</p>
+                    <p className="text-muted text-sm">Claiming {money(built.amount, picked.currency)} from {picked.counterparty}</p>
+                  </div>
+                  <span className={`stamp ${strengthColor[built.strength]}`}>{built.strength} case</span>
+                </div>
+                <p className="text-muted text-sm border-t border-line pt-3">{built.strengthWhy}</p>
               </div>
-              <span className={`stamp ${strengthColor[built.strength]}`}>{built.strength} case</span>
-            </div>
-            <p className="text-muted text-sm border-t border-line pt-3">{built.strengthWhy}</p>
-          </div>
 
-          <div className="card space-y-3">
-            <p className="label">Your statement to PayPal</p>
-            <p className="font-medium text-paper">{built.title}</p>
-            <textarea className="input h-48 leading-relaxed" value={description} onChange={(e) => setDescription(e.target.value)} />
-            <p className="text-muted text-sm">Edit anything that isn&apos;t exactly right. This is what PayPal reads.</p>
-          </div>
-
-          <div className="card space-y-3">
-            <div className="flex justify-between gap-4">
-              <p className="label">Evidence to gather</p>
-              <p className="font-mono text-xs text-faint">{checked.length}/{built.evidence.length} ready</p>
+              <div className="card space-y-3">
+                <p className="label">Your statement to PayPal</p>
+                <p className="font-medium text-paper">{built.title}</p>
+                <textarea className="input h-48 leading-relaxed" value={description} onChange={(e) => setDescription(e.target.value)} />
+                <p className="text-muted text-sm">Edit anything that isn&apos;t exactly right. This is what PayPal reads.</p>
+              </div>
             </div>
-            {built.evidence.map((ev) => (
-              <label key={ev.item} className="flex gap-3 border-t border-line pt-3 cursor-pointer">
-                <input type="checkbox" checked={checked.includes(ev.item)} onChange={() => toggle(ev.item)} className="mt-1 accent-paper w-4 h-4 shrink-0" />
-                <span>
-                  <span className={`block font-medium ${checked.includes(ev.item) ? "text-faint line-through" : "text-paper"}`}>{ev.item}</span>
-                  <span className="block text-muted text-sm">{ev.why}</span>
-                </span>
-              </label>
-            ))}
-          </div>
 
-          {built.tips.length > 0 && (
-            <div className="card space-y-2">
-              <p className="label">Detective&apos;s tips</p>
-              <ul className="list-disc pl-5 space-y-1 text-muted">
-                {built.tips.map((t) => <li key={t}>{t}</li>)}
-              </ul>
+            <div className="space-y-4 lg:sticky lg:top-20">
+              <div className="card space-y-3">
+                <div className="flex justify-between gap-4">
+                  <p className="label">Evidence to gather</p>
+                  <p className="font-mono text-xs text-faint">{checked.length}/{built.evidence.length} ready</p>
+                </div>
+                {built.evidence.map((ev) => (
+                  <label key={ev.item} className="flex gap-3 border-t border-line pt-3 cursor-pointer">
+                    <input type="checkbox" checked={checked.includes(ev.item)} onChange={() => toggle(ev.item)} className="mt-1 accent-paper w-4 h-4 shrink-0" />
+                    <span>
+                      <span className={`block font-medium ${checked.includes(ev.item) ? "text-faint line-through" : "text-paper"}`}>{ev.item}</span>
+                      <span className="block text-muted text-sm">{ev.why}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              {built.tips.length > 0 && (
+                <div className="card space-y-2">
+                  <p className="label">Detective&apos;s tips</p>
+                  <ul className="list-disc pl-5 space-y-1 text-muted">
+                    {built.tips.map((t) => <li key={t}>{t}</li>)}
+                  </ul>
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           {loading === "file" ? (
             <Checklist steps={fileSteps} />
@@ -217,17 +225,15 @@ export default function Dispute() {
         </div>
       )}
 
-      {step === 4 && status && <Tracker c={status} currency={picked.currency} asked={asked} onResolve={resolve} onRefresh={refresh} busy={loading} />}
       {step === 4 && status && (
-        <AskDetective
-          kind="dispute"
-          context={{ payment: picked, case: built && { reason: built.reasonLabel, description, evidence: built.evidence }, status }}
-          suggestions={["What happens next?", "What if the seller doesn't respond?", "When will I get my money back?"]}
-        />
-      )}
-
-      {step === 4 && status && (
-        <Link href="/cases" className="inline-block text-sm text-muted transition-colors hover:text-paper">See all your cases →</Link>
+        <Tracker c={status} currency={picked.currency} asked={asked} onResolve={resolve} onRefresh={refresh} busy={loading}>
+          <AskDetective
+            kind="dispute"
+            context={{ payment: picked, case: built && { reason: built.reasonLabel, description, evidence: built.evidence }, status }}
+            suggestions={["What happens next?", "What if the seller doesn't respond?", "When will I get my money back?"]}
+          />
+          <Link href="/cases" className="inline-block text-sm text-muted transition-colors hover:text-paper">See all your cases →</Link>
+        </Tracker>
       )}
 
       {error && <p className="text-danger">{error}</p>}

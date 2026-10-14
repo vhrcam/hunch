@@ -103,13 +103,14 @@ export default function Cases() {
             {open.seller} · {open.reason} · Filed {filedOn(open.filed)}
           </p>
           {loading === "load" && <Checklist steps={loadSteps} />}
-          {status && <Tracker c={status} currency={open.currency} asked={asked} onResolve={resolve} onRefresh={refresh} busy={loading} />}
           {status && (
-            <AskDetective
-              kind="dispute"
-              context={{ case: { seller: open.seller, reason: open.reason, filed: open.filed }, status }}
-              suggestions={["What happens next?", "What if the seller doesn't respond?", "When will I get my money back?"]}
-            />
+            <Tracker c={status} currency={open.currency} asked={asked} onResolve={resolve} onRefresh={refresh} busy={loading}>
+              <AskDetective
+                kind="dispute"
+                context={{ case: { seller: open.seller, reason: open.reason, filed: open.filed }, status }}
+                suggestions={["What happens next?", "What if the seller doesn't respond?", "When will I get my money back?"]}
+              />
+            </Tracker>
           )}
         </div>
       ) : (
@@ -127,14 +128,14 @@ export default function Cases() {
           {active.length > 0 && (
             <section className="space-y-3">
               <p className="label">Open · {active.length}</p>
-              {active.map((c) => <Row key={c.id} c={c} onOpen={view} />)}
+              <div className="grid lg:grid-cols-2 gap-3">{active.map((c) => <Row key={c.id} c={c} onOpen={view} />)}</div>
             </section>
           )}
 
           {closed.length > 0 && (
             <section className="space-y-3">
               <p className="label">Closed · {closed.length}</p>
-              {closed.map((c) => <Row key={c.id} c={c} onOpen={view} />)}
+              <div className="grid lg:grid-cols-2 gap-3">{closed.map((c) => <Row key={c.id} c={c} onOpen={view} />)}</div>
             </section>
           )}
         </div>

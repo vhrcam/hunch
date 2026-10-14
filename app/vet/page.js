@@ -78,52 +78,56 @@ export default function Vet() {
       {error && <p className="text-danger">{error}</p>}
 
       {result && (
-        <div className="space-y-4">
-          <div className="card space-y-6">
-            <div className="flex items-end justify-between gap-4">
-              <div className="space-y-2">
-                <p className="label">Trust score</p>
-                <p className={`headline text-7xl ${color[result.level]}`}>
-                  {result.score}<span className="text-2xl text-faint font-medium tracking-normal">/100</span>
-                </p>
-              </div>
-              <span className={`stamp text-base sm:text-xl mb-2 ${color[result.level]}`}>{stamp[result.level]}</span>
-            </div>
-            <div className="h-1.5 rounded-full bg-raised overflow-hidden">
-              <div className={`h-full rounded-full ${bar[result.level]}`} style={{ width: `${result.score}%` }} />
-            </div>
-            <p className="text-lg text-paper leading-relaxed">{result.verdict}</p>
-          </div>
-
-          <div className="card space-y-4">
-            <p className="label">Clues</p>
-            {result.clues.map((c) => (
-              <div key={c.label} className="flex gap-4 border-t border-line pt-4">
-                <span className={`font-mono text-sm w-10 shrink-0 ${c.impact < 0 ? "text-danger" : c.impact > 0 ? "text-safe" : "text-faint"}`}>
-                  {c.impact > 0 ? `+${c.impact}` : c.impact || "0"}
-                </span>
-                <div className="space-y-0.5">
-                  <p className="text-paper font-medium">{c.label}</p>
-                  <p className="text-muted text-sm">{c.detail}</p>
+        <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-4 items-start">
+          <div className="space-y-4 lg:sticky lg:top-20">
+            <div className="card space-y-6">
+              <div className="flex items-end justify-between gap-4">
+                <div className="space-y-2">
+                  <p className="label">Trust score</p>
+                  <p className={`headline text-7xl ${color[result.level]}`}>
+                    {result.score}<span className="text-2xl text-faint font-medium tracking-normal">/100</span>
+                  </p>
                 </div>
+                <span className={`stamp text-base sm:text-xl mb-2 ${color[result.level]}`}>{stamp[result.level]}</span>
               </div>
-            ))}
+              <div className="h-1.5 rounded-full bg-raised overflow-hidden">
+                <div className={`h-full rounded-full ${bar[result.level]}`} style={{ width: `${result.score}%` }} />
+              </div>
+              <p className="text-lg text-paper leading-relaxed">{result.verdict}</p>
+            </div>
+
+            {result.unchecked.length > 0 && (
+              <div className="card space-y-3">
+                <p className="label">Couldn&apos;t check</p>
+                <ul className="text-muted text-sm list-disc pl-5 space-y-1">
+                  {result.unchecked.map((u) => <li key={u}>{u}</li>)}
+                </ul>
+              </div>
+            )}
           </div>
 
-          {result.unchecked.length > 0 && (
-            <div className="card space-y-3">
-              <p className="label">Couldn&apos;t check</p>
-              <ul className="text-muted text-sm list-disc pl-5 space-y-1">
-                {result.unchecked.map((u) => <li key={u}>{u}</li>)}
-              </ul>
+          <div className="space-y-4">
+            <div className="card space-y-4">
+              <p className="label">Clues</p>
+              {result.clues.map((c) => (
+                <div key={c.label} className="flex gap-4 border-t border-line pt-4">
+                  <span className={`font-mono text-sm w-10 shrink-0 ${c.impact < 0 ? "text-danger" : c.impact > 0 ? "text-safe" : "text-faint"}`}>
+                    {c.impact > 0 ? `+${c.impact}` : c.impact || "0"}
+                  </span>
+                  <div className="space-y-0.5">
+                    <p className="text-paper font-medium">{c.label}</p>
+                    <p className="text-muted text-sm">{c.detail}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
 
-          <AskDetective
-            kind="vet"
-            context={{ pasted: input, result }}
-            suggestions={["Why this score?", "What should I ask the seller?", "Is there a safer way to pay?"]}
-          />
+            <AskDetective
+              kind="vet"
+              context={{ pasted: input, result }}
+              suggestions={["Why this score?", "What should I ask the seller?", "Is there a safer way to pay?"]}
+            />
+          </div>
         </div>
       )}
     </div>

@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${mono.variable} antialiased`}>
       <body className="min-h-screen font-sans flex flex-col">
         <header className="sticky top-0 z-10 border-b border-line bg-ink/80 backdrop-blur">
-          <nav className="max-w-5xl mx-auto px-5 h-14 flex items-center gap-5 sm:gap-6 text-sm">
+          <nav className="max-w-7xl mx-auto px-5 sm:px-8 h-14 flex items-center gap-5 sm:gap-6 text-sm">
             <Link href="/" className="flex items-center gap-2 text-paper font-semibold tracking-tight">
               <Logo size={26} />
               Hunch
@@ -35,9 +35,9 @@ export default function RootLayout({ children }) {
             </a>
           </nav>
         </header>
-        <main className="flex-1 w-full max-w-5xl mx-auto px-5 py-12">{children}</main>
+        <main className="flex-1 w-full max-w-7xl mx-auto px-5 sm:px-8 py-12">{children}</main>
         <footer className="border-t border-line">
-          <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between label">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between label">
             <span>Hunch · Built on PayPal</span>
             <span className="hidden sm:inline">Sandbox · no real money moves</span>
           </div>
