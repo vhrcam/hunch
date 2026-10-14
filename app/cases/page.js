@@ -22,13 +22,11 @@ async function api(path, body) {
 
 function Row({ c, onOpen }) {
   return (
-    <button onClick={() => onOpen(c)} className="card w-full text-left flex items-center justify-between gap-4 transition-colors hover:border-line-strong!">
-      <div className="space-y-1 min-w-0">
-        <p className="font-medium text-paper truncate">{c.seller}</p>
-        <p className="text-muted text-sm">{c.reason} · Filed {filedOn(c.filed)}</p>
-      </div>
-      <div className="flex flex-col items-end gap-2 shrink-0">
-        <p className="font-mono text-lg text-paper">{money(c.amount, c.currency)}</p>
+    <button onClick={() => onOpen(c)} className="card w-full text-left grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 transition-colors hover:border-line-strong!">
+      <p className="font-medium text-paper truncate">{c.seller}</p>
+      <p className="font-mono text-lg text-paper text-right">{money(c.amount, c.currency)}</p>
+      <p className="text-muted text-sm col-span-2 sm:col-span-1">{c.reason} · Filed {filedOn(c.filed)}</p>
+      <div className="col-span-2 sm:col-span-1 pt-2 sm:pt-0 sm:justify-self-end">
         <StatusPill status={c.status} outcome={c.outcome} since={c.since} />
       </div>
     </button>
