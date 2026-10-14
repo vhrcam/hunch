@@ -95,7 +95,8 @@ export default function Detective({ size = 120, searching = false, className = "
             <path d="M72 95a10 10 0 0 1 7-8M108 95a10 10 0 0 1 7-8" strokeWidth="2.5" opacity="0.75" />
             <path d="M75 103l10-10M111 103l10-10" strokeWidth="2" opacity="0.16" />
           </g>
-          <path d="M87 131.5q6 1.5 12 0" fill="none" stroke="#16171a" strokeWidth="3" strokeLinecap="round" />
+          <path d="M88 131.5h11" fill="none" stroke="#16171a" strokeWidth="3" strokeLinecap="round" />
+          <path d="M86.5 128q-2.5 3.5 0 7" fill="none" stroke="#16171a" strokeWidth="2.5" strokeLinecap="round" />
         </g>
       </g>
 
