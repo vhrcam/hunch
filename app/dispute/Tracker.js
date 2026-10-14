@@ -1,4 +1,5 @@
 import Detective from "../Detective";
+import CaseClosed from "./CaseClosed";
 import { money, day } from "./format";
 
 export const statuses = {
@@ -64,16 +65,8 @@ export default function Tracker({ c, currency, asked, onResolve, onRefresh, busy
   return (
     <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-4 items-start">
       <div className="space-y-4">
-        {won ? (
-          <div className="card border-safe! text-center py-14! flex flex-col items-center gap-6">
-            <Detective size={96} className="text-paper" />
-            <p className="label">Case {c.disputeId}</p>
-            <div className="stamp text-safe px-6 py-4 leading-tight space-y-2 transition duration-700 ease-out starting:scale-150 starting:opacity-0">
-              <p className="text-xl sm:text-3xl">Case closed</p>
-              <p className="text-2xl sm:text-4xl text-paper">{money(c.refunded || c.amount, currency)} refunded</p>
-            </div>
-            <p className="text-muted max-w-sm">PayPal ruled in your favor. The money goes back to your account.</p>
-          </div>
+        {c.outcome ? (
+          <CaseClosed c={c} currency={currency} won={won} />
         ) : (
           <div className="card space-y-5">
             <div className="flex flex-wrap items-start justify-between gap-4">

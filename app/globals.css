@@ -113,16 +113,37 @@ body {
   border-color: var(--color-muted);
 }
 
-.stamp {
+.seal {
+  animation: slam 0.5s cubic-bezier(0.2, 0.9, 0.25, 1) 0.3s both;
+}
+
+.card:has(.seal) {
+  animation: thud 0.28s ease-out 0.6s;
+}
+
+.cursor {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  border: 2px solid currentColor;
-  border-radius: 6px;
-  padding: 4px 12px;
-  transform: rotate(-3deg);
+  width: 0.6em;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: currentColor;
+  animation: blink 0.7s steps(1) infinite;
+}
+
+@keyframes slam {
+  0% { opacity: 0; transform: scale(2.3) rotate(-16deg); }
+  60% { opacity: 1; transform: scale(0.93) rotate(-5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+}
+
+@keyframes thud {
+  30% { transform: translate(1.5px, 2px); }
+  60% { transform: translate(-1px, -1px); }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 .smoke {
@@ -150,4 +171,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .smoke, .search { animation: none; }
+  .seal { animation: none; transform: rotate(-6deg); }
+  .card:has(.seal) { animation: none; }
 }

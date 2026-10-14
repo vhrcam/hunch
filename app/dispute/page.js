@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import AskDetective from "../AskDetective";
+import Seal from "../Seal";
 import { useEffect, useState } from "react";
 import Steps from "./Steps";
 import Checklist from "./Checklist";
@@ -18,7 +19,7 @@ const stories = [
 const buildSteps = ["Pulling the payment record", "Reading your story", "Matching PayPal's dispute rules", "Drafting your case", "Listing the evidence"];
 const fileSteps = ["Opening the case with PayPal", "Attaching your statement", "Checking the case status"];
 
-const strengthColor = { strong: "text-safe", fair: "text-amber", weak: "text-danger" };
+const strengthLevel = { strong: "safe", fair: "caution", weak: "danger" };
 
 const offline = "That didn't go through. Try again in a moment.";
 
@@ -173,7 +174,7 @@ export default function Dispute() {
                     <p className="headline text-3xl">{built.reasonLabel}</p>
                     <p className="text-muted text-sm">Claiming {money(built.amount, picked.currency)} from {picked.counterparty}</p>
                   </div>
-                  <span className={`stamp ${strengthColor[built.strength]}`}>{built.strength} case</span>
+                  <Seal level={strengthLevel[built.strength]} ring={`HUNCH ${built.strength.toUpperCase()} CASE`} label={`${built.strength} case`} size={112} />
                 </div>
                 <p className="text-muted text-sm border-t border-line pt-3">{built.strengthWhy}</p>
               </div>
