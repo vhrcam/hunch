@@ -1,5 +1,6 @@
 "use client";
 
+import AskDetective from "../AskDetective";
 import { useState } from "react";
 import Checklist from "../dispute/Checklist";
 
@@ -117,6 +118,12 @@ export default function Vet() {
               </ul>
             </div>
           )}
+
+          <AskDetective
+            kind="vet"
+            context={{ pasted: input, result }}
+            suggestions={["Why this score?", "What should I ask the seller?", "Is there a safer way to pay?"]}
+          />
         </div>
       )}
     </div>

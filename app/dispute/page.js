@@ -1,5 +1,6 @@
 "use client";
 
+import AskDetective from "../AskDetective";
 import { useEffect, useState } from "react";
 import Steps from "./Steps";
 import Checklist from "./Checklist";
@@ -216,6 +217,13 @@ export default function Dispute() {
       )}
 
       {step === 4 && status && <Tracker c={status} currency={picked.currency} asked={asked} onResolve={resolve} onRefresh={refresh} busy={loading} />}
+      {step === 4 && status && (
+        <AskDetective
+          kind="dispute"
+          context={{ payment: picked, case: built && { reason: built.reasonLabel, description, evidence: built.evidence }, status }}
+          suggestions={["What happens next?", "What if the seller doesn't respond?", "When will I get my money back?"]}
+        />
+      )}
 
       {error && <p className="text-danger">{error}</p>}
     </div>
