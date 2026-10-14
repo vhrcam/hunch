@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
         <main className="flex-1 w-full max-w-5xl mx-auto px-5 py-12">{children}</main>
         <footer className="border-t border-line">
           <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between label">
-            <span>Hunch · PayPal AI Hackathon</span>
+            <span>Hunch · Built on PayPal</span>
             <span className="hidden sm:inline">Sandbox · no real money moves</span>
           </div>
         </footer>
