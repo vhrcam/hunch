@@ -37,9 +37,7 @@ export default function AskDetective({ kind, context, suggestions = [], onClose,
   return (
     <section className={`card space-y-5 ${className}`}>
       <div className="flex items-center gap-3">
-        <span className="grid place-items-center size-9 rounded-full bg-raised border border-line text-paper">
-          <Logo size={20} />
-        </span>
+        <Logo size={34} className="text-paper shrink-0" />
         <div className="mr-auto">
           <p className="text-paper font-medium">Ask the Detective</p>
           <p className="text-faint text-sm">{subtitle[kind]} Hunch answers, you decide.</p>
