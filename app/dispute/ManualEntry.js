@@ -33,7 +33,7 @@ export default function ManualEntry({ onSubmit }) {
         </label>
         <label className="space-y-1">
           <span className="text-sm text-muted">Amount (USD)</span>
-          <input className="input" type="number" min="0.01" step="0.01" value={f.amount} onChange={set("amount")} placeholder="200.00" />
+          <input className="input" type="number" min="0.01" step="0.01" value={f.amount} onChange={set("amount")} placeholder="20.00" />
         </label>
         <label className="space-y-1">
           <span className="text-sm text-muted">Paid to</span>
@@ -41,11 +41,11 @@ export default function ManualEntry({ onSubmit }) {
         </label>
         <label className="space-y-1">
           <span className="text-sm text-muted">Date <span className="text-faint">(optional)</span></span>
-          <input className="input" type="date" value={f.date} onChange={set("date")} />
+          <input className={`input ${f.date ? "" : "text-faint!"}`} type="date" value={f.date} onChange={set("date")} />
         </label>
         <label className="space-y-1">
           <span className="text-sm text-muted">What it was for <span className="text-faint">(optional)</span></span>
-          <input className="input" value={f.note} onChange={set("note")} placeholder="Nintendo Switch OLED" />
+          <input className="input" value={f.note} onChange={set("note")} placeholder="Clothes" />
         </label>
       </div>
       <button className="btn" disabled={!validId || !(Number(f.amount) > 0)}>Use this payment</button>

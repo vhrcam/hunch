@@ -18,6 +18,10 @@
   --font-mono: var(--font-jetbrains);
 }
 
+html {
+  color-scheme: dark;
+}
+
 body {
   background: var(--color-ink);
   color: var(--color-text);
