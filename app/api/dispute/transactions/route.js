@@ -9,7 +9,7 @@ export async function GET() {
   const start = new Date(end - 30 * 24 * 60 * 60 * 1000);
   const data = await paypal(`/v1/reporting/transactions?start_date=${stamp(start)}&end_date=${stamp(end)}&fields=all&page_size=50`);
   const transactions = (data.transaction_details || [])
-    .filter((t) => Number(t.transaction_info.transaction_amount.value) < 0)
+    .filter((t) => Number(t.transaction_info.transaction_amount.value) < 0 && t.payer_info?.email_address)
     .map((t) => ({
       id: t.transaction_info.transaction_id,
       date: t.transaction_info.transaction_initiation_date.slice(0, 10),
