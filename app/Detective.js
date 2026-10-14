@@ -16,6 +16,7 @@ export default function Detective({ size = 120, searching = false, className = "
       idle = setTimeout(wander, 1600 + Math.random() * 2000);
     };
     const follow = (e) => {
+      if (!ref.current) return;
       clearTimeout(idle);
       const r = ref.current.getBoundingClientRect();
       const dx = e.clientX - (r.left + r.width / 2);
