@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Detective from "./Detective";
+import HomeChat from "./HomeChat";
 
 const before = [
   ["Domain age", "How long the store's website has existed"],
@@ -72,6 +73,8 @@ export default function Home() {
           paid, filed, or sent until you press the button. You make the call.
         </p>
       </section>
+
+      <HomeChat />
     </div>
   );
 }
