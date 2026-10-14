@@ -80,7 +80,7 @@ export default function Vet() {
       {error && <p className="text-danger">{error}</p>}
 
       {result && (
-        <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-4 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-4 items-start">
           <div className="space-y-4 lg:sticky lg:top-20">
             <div className="card space-y-6">
               <div className="flex items-center justify-between gap-4">

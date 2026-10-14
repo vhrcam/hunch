@@ -120,14 +120,14 @@ export default function Cases() {
           {active.length > 0 && (
             <section className="space-y-3">
               <p className="label">Open · {active.length}</p>
-              <div className="grid lg:grid-cols-2 gap-3">{active.map((c) => <Row key={c.id} c={c} onOpen={view} />)}</div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">{active.map((c) => <Row key={c.id} c={c} onOpen={view} />)}</div>
             </section>
           )}
 
           {closed.length > 0 && (
             <section className="space-y-3">
               <p className="label">Closed · {closed.length}</p>
-              <div className="grid lg:grid-cols-2 gap-3">{closed.map((c) => <Row key={c.id} c={c} onOpen={view} />)}</div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">{closed.map((c) => <Row key={c.id} c={c} onOpen={view} />)}</div>
             </section>
           )}
         </div>

@@ -64,7 +64,7 @@ export default function Tracker({ c, currency, asked, onResolve, onRefresh, busy
   const yourMove = c.status === "WAITING_FOR_BUYER_RESPONSE";
 
   return (
-    <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-4 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-4 items-start">
       <div className="space-y-4">
         {c.outcome ? (
           <CaseClosed c={c} currency={currency} />

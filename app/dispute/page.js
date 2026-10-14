@@ -111,7 +111,7 @@ export default function Dispute() {
         <h2 className="headline text-2xl">Which payment went wrong?</h2>
         {!transactions && <p className="text-muted text-sm animate-pulse">Pulling your recent payments...</p>}
         {noList && <p className="text-muted">No recent payments showed up from PayPal yet. Enter the payment yourself and Hunch takes it from there.</p>}
-        <div className="grid lg:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {transactions?.map((t) => (
             <button
               key={t.id}
@@ -165,7 +165,7 @@ export default function Dispute() {
 
       {step === 3 && (
         <div className="space-y-6">
-          <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-4 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-4 items-start">
             <div className="space-y-4">
               <div className="card space-y-4">
                 <div className="flex flex-wrap items-start justify-between gap-4">
