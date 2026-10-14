@@ -11,6 +11,7 @@ export async function GET() {
         id: d.dispute_id,
         filed: d.create_time,
         status: d.status,
+        since: d.update_time,
         outcome: full.dispute_outcome?.outcome_code || null,
         amount: d.dispute_amount.value,
         currency: d.dispute_amount.currency_code,

@@ -53,6 +53,7 @@ What the statuses mean:
     status: d.status,
     stage: d.dispute_life_cycle_stage,
     outcome,
+    since: d.update_time,
     amount: d.dispute_amount?.value,
     refunded: d.dispute_outcome?.amount_refunded?.value || null,
     dueDate,

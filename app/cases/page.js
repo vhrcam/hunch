@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import AskDetective from "../AskDetective";
 import Checklist from "../dispute/Checklist";
-import Tracker, { statuses } from "../dispute/Tracker";
+import Tracker, { StatusPill } from "../dispute/Tracker";
 import { money } from "../dispute/format";
 
 const filedOn = (date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
@@ -20,15 +20,7 @@ async function api(path, body) {
   return data;
 }
 
-function badge(c) {
-  if (["RESOLVED_BUYER_FAVOUR", "ACCEPTED"].includes(c.outcome)) return ["Won", "text-safe border-safe/40"];
-  if (["RESOLVED_SELLER_FAVOUR", "DENIED"].includes(c.outcome)) return ["Seller won", "text-danger border-danger/40"];
-  if (c.status === "WAITING_FOR_BUYER_RESPONSE") return ["Your move", "text-amber border-amber/40"];
-  return [statuses[c.status] || c.status, "text-muted border-line-strong"];
-}
-
 function Row({ c, onOpen }) {
-  const [label, color] = badge(c);
   return (
     <button onClick={() => onOpen(c)} className="card w-full text-left flex items-center justify-between gap-4 transition-colors hover:border-line-strong!">
       <div className="space-y-1 min-w-0">
@@ -37,7 +29,7 @@ function Row({ c, onOpen }) {
       </div>
       <div className="flex flex-col items-end gap-2 shrink-0">
         <p className="font-mono text-lg text-paper">{money(c.amount, c.currency)}</p>
-        <span className={`font-mono text-[11px] uppercase tracking-wider border rounded-full px-2.5 py-0.5 ${color}`}>{label}</span>
+        <StatusPill status={c.status} outcome={c.outcome} since={c.since} />
       </div>
     </button>
   );

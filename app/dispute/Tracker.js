@@ -11,9 +11,54 @@ export const statuses = {
 const stages = { INQUIRY: "Inquiry stage", CHARGEBACK: "Claim stage" };
 const deadlines = { WAITING_FOR_SELLER_RESPONSE: "Seller must respond by", WAITING_FOR_BUYER_RESPONSE: "You must respond by" };
 
+function ago(date) {
+  const m = Math.max(1, Math.round((Date.now() - new Date(date)) / 60000));
+  return m < 60 ? `${m}m` : m < 1440 ? `${Math.round(m / 60)}h` : `${Math.round(m / 1440)}d`;
+}
+
+export function StatusPill({ status, outcome, since }) {
+  const won = ["RESOLVED_BUYER_FAVOUR", "ACCEPTED"].includes(outcome);
+  const lost = ["RESOLVED_SELLER_FAVOUR", "DENIED"].includes(outcome);
+  const yourMove = status === "WAITING_FOR_BUYER_RESPONSE";
+  const label = won ? "Won" : lost ? "Seller won" : statuses[status] || status;
+  const tone = won ? "text-safe" : lost ? "text-danger" : yourMove ? "text-amber" : "text-text";
+  const dot = won ? "bg-safe" : lost ? "bg-danger" : yourMove ? "bg-amber animate-pulse" : "bg-paper animate-pulse";
+
+  return (
+    <span className={`inline-flex items-center gap-2 rounded-full border border-line-strong bg-raised px-3 py-1 text-xs whitespace-nowrap ${tone}`}>
+      <span className={`size-1.5 rounded-full ${dot}`} />
+      {label}
+      {since && !outcome && <span className="font-mono text-faint">· {ago(since)}</span>}
+    </span>
+  );
+}
+
+function Progress({ c, yourMove }) {
+  const at = c.status === "RESOLVED" ? 3 : c.status === "UNDER_REVIEW" ? 2 : 1;
+  const steps = ["Filed", yourMove ? "Your turn" : "Seller's turn", "PayPal review", "Closed"];
+  const now = yourMove ? { dot: "border-amber ring-amber/15", text: "text-amber" } : { dot: "border-paper ring-paper/15", text: "text-paper" };
+
+  return (
+    <ol className="flex pt-2">
+      {steps.map((step, i) => (
+        <li key={step} className="flex-1 last:flex-none">
+          <div className="flex items-center">
+            <span
+              className={`size-3 shrink-0 rounded-full border-2 ${
+                i < at ? "bg-paper border-paper" : i === at ? `bg-ink ring-4 ${now.dot}` : "bg-ink border-line-strong"
+              }`}
+            />
+            {i < steps.length - 1 && <span className={`h-0.5 flex-1 ${i < at ? "bg-paper" : "bg-line"}`} />}
+          </div>
+          <p className={`mt-2.5 pr-2 font-mono text-[0.68rem] uppercase tracking-wider ${i < at ? "text-muted" : i === at ? now.text : "text-faint"}`}>{step}</p>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export default function Tracker({ c, currency, asked, onResolve, onRefresh, busy, children }) {
   const won = ["RESOLVED_BUYER_FAVOUR", "ACCEPTED"].includes(c.outcome);
-  const lost = ["RESOLVED_SELLER_FAVOUR", "DENIED"].includes(c.outcome);
   const yourMove = c.status === "WAITING_FOR_BUYER_RESPONSE";
 
   return (
@@ -37,10 +82,9 @@ export default function Tracker({ c, currency, asked, onResolve, onRefresh, busy
                 <p className="headline text-5xl">{money(c.amount, currency)}</p>
                 <p className="text-muted text-sm">{stages[c.stage] || c.stage}</p>
               </div>
-              <span className={`stamp text-sm sm:text-base ${lost ? "text-danger" : yourMove ? "text-amber" : "text-muted"}`}>
-                {lost ? "Seller won" : statuses[c.status] || c.status}
-              </span>
+              <StatusPill status={c.status} outcome={c.outcome} since={c.since} />
             </div>
+            <Progress c={c} yourMove={yourMove} />
             {c.dueDate && !c.outcome && (
               <p className="text-muted text-sm border-t border-line pt-4">
                 {deadlines[c.status] || "Next deadline:"} <span className={yourMove ? "text-amber" : "text-paper"}>{day(c.dueDate)}</span>
