@@ -4,6 +4,11 @@
 
 Built for the PayPal AI Hackathon.
 
+**Try it live: [hunch-b3dy.onrender.com](https://hunch-b3dy.onrender.com)**
+(It runs on a free server that sleeps when idle, so the first load can take up to a minute.)
+
+![Hunch home page](docs/screenshots/home.png)
+
 ## Two modes, one mission
 
 ### 🔍 Before you pay: Vet a seller
@@ -16,6 +21,8 @@ Paste a seller link, a PayPal.me link, or the payment request itself. Hunch inve
 
 You get a 0–100 trust score, a stamped verdict, and a plain-language explanation of every clue, plus a list of anything Hunch couldn't check.
 
+![Vet Mode flagging a too-good-to-be-true PS5 deal](docs/screenshots/vet.png)
+
 ### 🛡️ After it goes wrong: File a dispute
 Describe what happened in your own words. Hunch:
 
@@ -25,6 +32,10 @@ Describe what happened in your own words. Hunch:
 4. Lists exactly what evidence to attach and why it helps
 5. Files the dispute through PayPal's Disputes API
 6. Tracks the case and coaches you on what to do next, until it's closed
+
+| Your case, ready to file | Tracked until it's closed |
+|---|---|
+| ![Hunch's case for an item that never arrived](docs/screenshots/dispute-case.png) | ![A dispute closed in the buyer's favor with a $200 refund](docs/screenshots/dispute-tracker.png) |
 
 ## It's a tool, not an agent
 
