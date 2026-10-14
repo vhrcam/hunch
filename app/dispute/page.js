@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import AskDetective from "../AskDetective";
 import { useEffect, useState } from "react";
 import Steps from "./Steps";
@@ -223,6 +224,10 @@ export default function Dispute() {
           context={{ payment: picked, case: built && { reason: built.reasonLabel, description, evidence: built.evidence }, status }}
           suggestions={["What happens next?", "What if the seller doesn't respond?", "When will I get my money back?"]}
         />
+      )}
+
+      {step === 4 && status && (
+        <Link href="/cases" className="inline-block text-sm text-muted transition-colors hover:text-paper">See all your cases →</Link>
       )}
 
       {error && <p className="text-danger">{error}</p>}

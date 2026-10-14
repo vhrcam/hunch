@@ -1,7 +1,7 @@
 import Detective from "../Detective";
 import { money, day } from "./format";
 
-const statuses = {
+export const statuses = {
   OPEN: "Case open",
   WAITING_FOR_SELLER_RESPONSE: "Waiting on seller",
   WAITING_FOR_BUYER_RESPONSE: "Your move",
