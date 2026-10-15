@@ -78,6 +78,10 @@ export default function Dispute() {
 
   const file = () => run("file", async () => {
     const { disputeId } = await api("file", { transactionId: picked.id, reason: built.reason, amount: built.amount, description });
+    try {
+      const filed = JSON.parse(localStorage.getItem("hunch-filed")) || [];
+      localStorage.setItem("hunch-filed", JSON.stringify([...filed, disputeId]));
+    } catch {}
     setStatus(await api(`status?id=${disputeId}`));
     setStep(4);
   });

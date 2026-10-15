@@ -37,6 +37,18 @@ function Row({ c, onOpen, onArchive }) {
   );
 }
 
+function Fold({ title, cases, onOpen, onArchive }) {
+  if (!cases.length) return null;
+  return (
+    <details className="group space-y-3">
+      <summary className="label cursor-pointer list-none transition-colors hover:text-paper">
+        {title} · {cases.length} <span className="inline-block transition-transform group-open:rotate-90">›</span>
+      </summary>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 opacity-60">{cases.map((c) => <Row key={c.id} c={c} onOpen={onOpen} onArchive={onArchive} />)}</div>
+    </details>
+  );
+}
+
 export default function Cases() {
   const [cases, setCases] = useState(null);
   const [open, setOpen] = useState(null);
@@ -45,11 +57,13 @@ export default function Cases() {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState("");
   const [moved, setMoved] = useState({});
+  const [mine, setMine] = useState([]);
 
   useEffect(() => {
     api("cases").then((d) => setCases(d.cases)).catch(() => setCases([]));
     try {
       setMoved(JSON.parse(localStorage.getItem("hunch-archive")) || {});
+      setMine(JSON.parse(localStorage.getItem("hunch-filed")) || []);
     } catch {}
   }, []);
 
@@ -92,7 +106,8 @@ export default function Cases() {
   const refresh = () => run("refresh", async () => setStatus(await api(`status?id=${open.id}`)));
 
   const all = cases?.map((c) => ({ ...c, archived: moved[c.id] ?? c.archived })) || [];
-  const current = all.filter((c) => !c.archived);
+  const current = all.filter((c) => !c.archived && mine.includes(c.id));
+  const others = all.filter((c) => !c.archived && !mine.includes(c.id));
   const active = current.filter((c) => c.status !== "RESOLVED");
   const closed = current.filter((c) => c.status === "RESOLVED");
   const archived = all.filter((c) => c.archived);
@@ -128,7 +143,7 @@ export default function Cases() {
 
           {cases && current.length === 0 && (
             <div className="card space-y-4">
-              <p className="text-paper font-medium">No disputes yet.</p>
+              <p className="text-paper font-medium">You haven&apos;t filed a dispute yet.</p>
               <p className="text-muted text-sm">If a purchase went wrong, Hunch can build and file your case.</p>
               <Link href="/dispute" className="btn inline-block">File a dispute</Link>
             </div>
@@ -148,14 +163,8 @@ export default function Cases() {
             </section>
           )}
 
-          {archived.length > 0 && (
-            <details className="group space-y-3">
-              <summary className="label cursor-pointer list-none transition-colors hover:text-paper">
-                Archived · {archived.length} <span className="inline-block transition-transform group-open:rotate-90">›</span>
-              </summary>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 opacity-60">{archived.map((c) => <Row key={c.id} c={c} onOpen={view} onArchive={archive} />)}</div>
-            </details>
-          )}
+          <Fold title="Other cases on this account" cases={others} onOpen={view} onArchive={archive} />
+          <Fold title="Archived" cases={archived} onOpen={view} onArchive={archive} />
         </div>
       )}
 
