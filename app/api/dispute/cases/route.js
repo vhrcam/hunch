@@ -3,11 +3,13 @@ import { reasons } from "../reasons";
 
 export async function GET() {
   const cutoff = process.env.ARCHIVE_BEFORE;
+  const demoSeller = process.env.SELLER_PAYPAL_EMAIL;
   const { items = [] } = await paypal("/v1/customer/disputes?page_size=20");
   const cases = await Promise.all(
     items.map(async (d) => {
       const full = await paypal(`/v1/customer/disputes/${d.dispute_id}`);
       const seller = full.disputed_transactions?.[0]?.seller;
+      if (demoSeller && seller?.email !== demoSeller) return null;
       return {
         id: d.dispute_id,
         filed: d.create_time,
@@ -23,5 +25,5 @@ export async function GET() {
       };
     })
   );
-  return Response.json({ cases });
+  return Response.json({ cases: cases.filter(Boolean) });
 }
