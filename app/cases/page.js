@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import AskDetective from "../AskDetective";
+import Chevron from "../Chevron";
 import Checklist from "../dispute/Checklist";
 import Tracker, { StatusPill } from "../dispute/Tracker";
 import { money } from "../dispute/format";
@@ -122,7 +123,9 @@ export default function Cases() {
 
       {open ? (
         <div className="space-y-4">
-          <button onClick={back} className="text-sm text-muted transition-colors hover:text-paper">← All cases</button>
+          <button onClick={back} className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-paper">
+            <Chevron back /> All cases
+          </button>
           <p className="text-muted text-sm">
             {open.seller} · {open.reason} · Filed {filedOn(open.filed)}
           </p>

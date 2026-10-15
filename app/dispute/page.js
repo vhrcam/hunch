@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import AskDetective from "../AskDetective";
+import Chevron from "../Chevron";
 import Seal from "../Seal";
 import { useEffect, useState } from "react";
 import Steps from "./Steps";
@@ -242,7 +243,9 @@ export default function Dispute() {
             context={{ payment: picked, case: built && { reason: built.reasonLabel, description, evidence: built.evidence }, status }}
             suggestions={suggest(status)}
           />
-          <Link href="/cases" className="inline-block text-sm text-muted transition-colors hover:text-paper">See all your cases →</Link>
+          <Link href="/cases" className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-paper">
+            See all your cases <Chevron />
+          </Link>
         </Tracker>
       )}
 
