@@ -71,6 +71,8 @@ Fill in `.env.local`:
 | `GEMINI_API_KEY` | Google AI Studio → Get API key |
 | `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` | A sandbox REST app for the buyer's account, with **Transaction search** enabled |
 | `SELLER_PAYPAL_CLIENT_ID` / `SELLER_PAYPAL_CLIENT_SECRET` | A second sandbox app for the seller's account, used only by the demo's "simulate PayPal's decision" button |
+| `SELLER_PAYPAL_EMAIL` | Optional. The seller account's sandbox email. The payment list then only shows payments to that seller, since only its cases can be simulated |
+| `ARCHIVE_BEFORE` | Optional. A date like `2026-10-15T03:10:00Z`. Cases filed before it start out in Archived on Your cases |
 
 Then start it:
 
