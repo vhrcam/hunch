@@ -47,7 +47,7 @@ export default function Home() {
             <Link href="/dispute" className="btn-ghost">File a dispute</Link>
           </div>
         </div>
-        <Detective size={220} searching className="text-paper shrink-0 self-center" />
+        <Detective size={260} searching className="text-paper shrink-0 self-center" />
       </section>
 
       <section className="grid md:grid-cols-2 gap-4">
