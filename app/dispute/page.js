@@ -121,7 +121,10 @@ export default function Dispute() {
           {transactions?.map((t) => (
             <button
               key={t.id}
-              onClick={() => setPicked(t)}
+              onClick={() => {
+                setPicked(t);
+                go(2);
+              }}
               disabled={t.disputed}
               className={`card w-full text-left flex items-start justify-between gap-4 ${t.disputed ? "opacity-50 cursor-not-allowed" : "hover:border-line-strong!"} ${picked?.id === t.id ? "border-paper! ring-1 ring-paper" : ""}`}
             >
@@ -137,7 +140,6 @@ export default function Dispute() {
             </button>
           ))}
         </div>
-        {transactions?.length > 0 && <button className="btn" disabled={!picked} onClick={() => go(2)}>Continue</button>}
         {transactions?.length > 0 && (
           <button onClick={() => setManual(!manual)} className="block text-sm text-muted transition-colors hover:text-paper pt-2">
             Don&apos;t see it? Enter it yourself {manual ? "▴" : "▾"}

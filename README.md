@@ -54,7 +54,7 @@ Hunch investigates and drafts, but you make the call. Nothing is filed or sent w
 The live site runs on a shared PayPal sandbox buyer account with a few payments to a fake store, Northside Resale.
 
 1. **Vet a seller:** click **Too-good PS5** under the box, then **Investigate**.
-2. **File a dispute:** pick a Northside Resale payment and click **Continue**. Payments that are grayed out already have a case, since PayPal allows one dispute per payment.
+2. **File a dispute:** pick a Northside Resale payment. Payments that are grayed out already have a case, since PayPal allows one dispute per payment.
 3. Tell Hunch what went wrong, click **Build my case**, review it, and click **File dispute with PayPal**.
 4. On the tracker, click **Demo: simulate PayPal's decision**. The sandbox takes a few minutes, so click **Refresh** until the case closes in your favor.
 5. Open **Your cases** to see it with the rest.
