@@ -16,12 +16,14 @@ function search(monthsAgo) {
 export async function GET() {
   // Only the demo seller can play out a case (Simulate uses its keys), so hide payments to anyone else.
   const seller = process.env.SELLER_PAYPAL_EMAIL;
+  const cutoff = new Date(process.env.HIDE_BEFORE || 0);
   const [disputes, ...months] = await Promise.all([paypal("/v1/customer/disputes?page_size=50"), search(0), search(1), search(2)]);
   const disputed = new Set((disputes.items || []).flatMap((d) => d.disputed_transactions?.map((t) => t.buyer_transaction_id) || []));
   const transactions = months
     .flatMap((m) => m.transaction_details || [])
     .filter((t) => Number(t.transaction_info.transaction_amount.value) < 0 && t.payer_info?.email_address)
     .filter((t) => !seller || t.payer_info.email_address === seller)
+    .filter((t) => new Date(t.transaction_info.transaction_initiation_date) >= cutoff)
     .map((t) => ({
       id: t.transaction_info.transaction_id,
       date: t.transaction_info.transaction_initiation_date.slice(0, 10),

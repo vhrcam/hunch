@@ -105,7 +105,7 @@ export default function Cases() {
 
   const refresh = () => run("refresh", async () => setStatus(await api(`status?id=${open.id}`)));
 
-  const all = cases?.map((c) => ({ ...c, archived: moved[c.id] ?? c.archived })) || [];
+  const all = cases?.map((c) => ({ ...c, archived: Boolean(moved[c.id]) })) || [];
   const current = all.filter((c) => !c.archived && mine.includes(c.id));
   const others = all.filter((c) => !c.archived && !mine.includes(c.id));
   const active = current.filter((c) => c.status !== "RESOLVED");

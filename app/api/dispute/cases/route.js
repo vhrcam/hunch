@@ -2,11 +2,12 @@ import { paypal } from "@/lib/paypal";
 import { reasons } from "../reasons";
 
 export async function GET() {
-  const cutoff = process.env.ARCHIVE_BEFORE;
+  const cutoff = new Date(process.env.HIDE_BEFORE || 0);
   const demoSeller = process.env.SELLER_PAYPAL_EMAIL;
-  const { items = [] } = await paypal("/v1/customer/disputes?page_size=20");
+  const { items = [] } = await paypal("/v1/customer/disputes?page_size=50");
   const cases = await Promise.all(
     items.map(async (d) => {
+      if (new Date(d.create_time) < cutoff) return null;
       const full = await paypal(`/v1/customer/disputes/${d.dispute_id}`);
       const seller = full.disputed_transactions?.[0]?.seller;
       if (demoSeller && seller?.email !== demoSeller) return null;
@@ -20,7 +21,6 @@ export async function GET() {
         currency: d.dispute_amount.currency_code,
         reason: reasons[d.reason] || "Dispute",
         seller: seller?.name || seller?.email || "Unknown seller",
-        archived: Boolean(cutoff) && new Date(d.create_time) < new Date(cutoff),
         dueDate: full.buyer_response_due_date || full.seller_response_due_date || null,
       };
     })
