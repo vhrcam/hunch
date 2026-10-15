@@ -166,7 +166,7 @@ export default function Cases() {
             </section>
           )}
 
-          <Fold title="Other cases on this account" cases={others} onOpen={view} onArchive={archive} />
+          <Fold title="Other cases" cases={others} onOpen={view} onArchive={archive} />
           <Fold title="Archived" cases={archived} onOpen={view} onArchive={archive} />
         </div>
       )}
