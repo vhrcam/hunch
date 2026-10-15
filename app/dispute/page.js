@@ -9,6 +9,7 @@ import Checklist from "./Checklist";
 import Tracker from "./Tracker";
 import ManualEntry from "./ManualEntry";
 import { money, day } from "./format";
+import { suggest } from "./outcome";
 
 const stories = [
   "Seller never shipped it, it's been 3 weeks, they stopped answering",
@@ -231,7 +232,7 @@ export default function Dispute() {
           <AskDetective
             kind="dispute"
             context={{ payment: picked, case: built && { reason: built.reasonLabel, description, evidence: built.evidence }, status }}
-            suggestions={["What happens next?", "What if the seller doesn't respond?", "When will I get my money back?"]}
+            suggestions={suggest(status)}
           />
           <Link href="/cases" className="inline-block text-sm text-muted transition-colors hover:text-paper">See all your cases →</Link>
         </Tracker>

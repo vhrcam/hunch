@@ -6,6 +6,7 @@ import AskDetective from "../AskDetective";
 import Checklist from "../dispute/Checklist";
 import Tracker, { StatusPill } from "../dispute/Tracker";
 import { money } from "../dispute/format";
+import { suggest } from "../dispute/outcome";
 
 const filedOn = (date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
@@ -98,7 +99,7 @@ export default function Cases() {
               <AskDetective
                 kind="dispute"
                 context={{ case: { seller: open.seller, reason: open.reason, filed: open.filed }, status }}
-                suggestions={["What happens next?", "What if the seller doesn't respond?", "When will I get my money back?"]}
+                suggestions={suggest(status)}
               />
             </Tracker>
           )}
