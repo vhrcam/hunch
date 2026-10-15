@@ -117,14 +117,18 @@ export default function Dispute() {
             <button
               key={t.id}
               onClick={() => setPicked(t)}
-              className={`card w-full text-left flex items-start justify-between gap-4 hover:border-line-strong! ${picked?.id === t.id ? "border-paper! ring-1 ring-paper" : ""}`}
+              disabled={t.disputed}
+              className={`card w-full text-left flex items-start justify-between gap-4 ${t.disputed ? "opacity-50 cursor-not-allowed" : "hover:border-line-strong!"} ${picked?.id === t.id ? "border-paper! ring-1 ring-paper" : ""}`}
             >
               <div className="space-y-1 min-w-0">
                 <p className="font-medium text-paper">{t.counterparty}</p>
                 <p className="text-muted text-sm truncate">{[t.date && day(t.date), t.email].filter(Boolean).join(" · ")}</p>
                 {t.note && <p className="text-muted text-sm italic">&ldquo;{t.note}&rdquo;</p>}
               </div>
-              <p className="font-mono text-lg text-paper shrink-0">{money(t.amount, t.currency)}</p>
+              <div className="text-right shrink-0">
+                <p className="font-mono text-lg text-paper">{money(t.amount, t.currency)}</p>
+                {t.disputed && <p className="text-muted text-xs pt-1">Already disputed</p>}
+              </div>
             </button>
           ))}
         </div>
