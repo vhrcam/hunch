@@ -2,6 +2,7 @@ import { paypal } from "@/lib/paypal";
 import { reasons } from "../reasons";
 
 export async function GET() {
+  const cutoff = process.env.ARCHIVE_BEFORE;
   const { items = [] } = await paypal("/v1/customer/disputes?page_size=20");
   const cases = await Promise.all(
     items.map(async (d) => {
@@ -17,6 +18,7 @@ export async function GET() {
         currency: d.dispute_amount.currency_code,
         reason: reasons[d.reason] || "Dispute",
         seller: seller?.name || seller?.email || "Unknown seller",
+        archived: Boolean(cutoff) && new Date(d.create_time) < new Date(cutoff),
         dueDate: full.buyer_response_due_date || full.seller_response_due_date || null,
       };
     })

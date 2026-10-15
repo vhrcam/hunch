@@ -21,16 +21,19 @@ async function api(path, body) {
   return data;
 }
 
-function Row({ c, onOpen }) {
+function Row({ c, onOpen, onArchive }) {
   return (
-    <button onClick={() => onOpen(c)} className="card w-full text-left grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 transition-colors hover:border-line-strong!">
-      <p className="font-medium text-paper truncate">{c.seller}</p>
+    <div className="card relative grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 transition-colors hover:border-line-strong!">
+      <button onClick={() => onOpen(c)} className="font-medium text-paper truncate text-left after:absolute after:inset-0">{c.seller}</button>
       <p className="font-mono text-lg text-paper text-right">{money(c.amount, c.currency)}</p>
       <p className="text-muted text-sm col-span-2 sm:col-span-1">{c.reason} · Filed {filedOn(c.filed)}</p>
-      <div className="col-span-2 sm:col-span-1 pt-2 sm:pt-0 sm:justify-self-end">
+      <div className="col-span-2 sm:col-span-1 pt-2 sm:pt-0 flex items-center justify-between sm:justify-end gap-4">
         <StatusPill status={c.status} outcome={c.outcome} since={c.since} />
+        <button onClick={() => onArchive(c)} className="relative z-10 text-xs text-muted transition-colors hover:text-paper">
+          {c.archived ? "Unarchive" : "Archive"}
+        </button>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -41,10 +44,22 @@ export default function Cases() {
   const [asked, setAsked] = useState(false);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState("");
+  const [moved, setMoved] = useState({});
 
   useEffect(() => {
     api("cases").then((d) => setCases(d.cases)).catch(() => setCases([]));
+    try {
+      setMoved(JSON.parse(localStorage.getItem("hunch-archive")) || {});
+    } catch {}
   }, []);
+
+  const archive = (c) => {
+    const next = { ...moved, [c.id]: !c.archived };
+    setMoved(next);
+    try {
+      localStorage.setItem("hunch-archive", JSON.stringify(next));
+    } catch {}
+  };
 
   async function run(kind, work) {
     setLoading(kind);
@@ -76,8 +91,11 @@ export default function Cases() {
 
   const refresh = () => run("refresh", async () => setStatus(await api(`status?id=${open.id}`)));
 
-  const active = cases?.filter((c) => c.status !== "RESOLVED") || [];
-  const closed = cases?.filter((c) => c.status === "RESOLVED") || [];
+  const all = cases?.map((c) => ({ ...c, archived: moved[c.id] ?? c.archived })) || [];
+  const current = all.filter((c) => !c.archived);
+  const active = current.filter((c) => c.status !== "RESOLVED");
+  const closed = current.filter((c) => c.status === "RESOLVED");
+  const archived = all.filter((c) => c.archived);
 
   return (
     <div className="space-y-10">
@@ -108,7 +126,7 @@ export default function Cases() {
         <div className="space-y-10">
           {!cases && <p className="text-muted text-sm animate-pulse">Pulling your cases from PayPal...</p>}
 
-          {cases?.length === 0 && (
+          {cases && current.length === 0 && (
             <div className="card space-y-4">
               <p className="text-paper font-medium">No disputes yet.</p>
               <p className="text-muted text-sm">If a purchase went wrong, Hunch can build and file your case.</p>
@@ -119,15 +137,24 @@ export default function Cases() {
           {active.length > 0 && (
             <section className="space-y-3">
               <p className="label">Open · {active.length}</p>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">{active.map((c) => <Row key={c.id} c={c} onOpen={view} />)}</div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">{active.map((c) => <Row key={c.id} c={c} onOpen={view} onArchive={archive} />)}</div>
             </section>
           )}
 
           {closed.length > 0 && (
             <section className="space-y-3">
               <p className="label">Closed · {closed.length}</p>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">{closed.map((c) => <Row key={c.id} c={c} onOpen={view} />)}</div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">{closed.map((c) => <Row key={c.id} c={c} onOpen={view} onArchive={archive} />)}</div>
             </section>
+          )}
+
+          {archived.length > 0 && (
+            <details className="group space-y-3">
+              <summary className="label cursor-pointer list-none transition-colors hover:text-paper">
+                Archived · {archived.length} <span className="inline-block transition-transform group-open:rotate-90">›</span>
+              </summary>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 opacity-60">{archived.map((c) => <Row key={c.id} c={c} onOpen={view} onArchive={archive} />)}</div>
+            </details>
           )}
         </div>
       )}
