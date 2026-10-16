@@ -2,7 +2,7 @@
 
 import AskDetective from "../AskDetective";
 import Seal from "../Seal";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import Checklist from "../dispute/Checklist";
 
 const kinds = [
@@ -23,25 +23,31 @@ const ring = { safe: "HUNCH VERIFIED", caution: "HUNCH CAUTION", danger: "HUNCH 
 const color = { safe: "text-safe", caution: "text-amber", danger: "text-danger" };
 const bar = { safe: "bg-safe", caution: "bg-amber", danger: "bg-danger" };
 
-export default function Vet() {
-  const [input, setInput] = useState("");
+export default function Vet({ searchParams }) {
+  const start = use(searchParams).input;
+  const [input, setInput] = useState(start || "");
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(start));
   const [error, setError] = useState("");
 
-  async function investigate(e) {
+  function lookup(text) {
+    fetch("/api/vet", { method: "POST", body: JSON.stringify({ input: text }) })
+      .then((res) => res.json())
+      .then(setResult, () => setError("The investigation hit a snag. Try again."))
+      .finally(() => setLoading(false));
+  }
+
+  function investigate(e) {
     e.preventDefault();
     setLoading(true);
     setResult(null);
     setError("");
-    try {
-      const res = await fetch("/api/vet", { method: "POST", body: JSON.stringify({ input }) });
-      setResult(await res.json());
-    } catch {
-      setError("The investigation hit a snag. Try again.");
-    }
-    setLoading(false);
+    lookup(input);
   }
+
+  useEffect(() => {
+    if (start) lookup(start);
+  }, [start]);
 
   return (
     <div className="space-y-10">
