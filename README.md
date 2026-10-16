@@ -48,7 +48,7 @@ A Q&A box on every page. Ask about a seller, your case, or PayPal scams in gener
 ### 🧩 Hunch for Chrome and Brave
 Vet a seller without leaving their page. Click the Hunch icon in your toolbar and a small glass box with the detective floats over the page, already holding the page's link. Press Enter, watch him search, and the score, seal, verdict and top clues show up right there. Drag it anywhere. It only runs when you click it.
 
-![The Hunch extension rating Micro Center 80/100, Looks legit](docs/screenshots/extension.png)
+![The Hunch extension rating Micro Center 80/100, Looks legit](docs/screenshots/extension-box.png)
 
 **Install it (about a minute):**
 1. Download this repo (**Code → Download ZIP**) and unzip it.
