@@ -105,5 +105,5 @@ export async function POST(request) {
     verdict = [...worst, level === "danger" ? "Don't pay." : level === "caution" ? "Be careful." : "Nothing alarming turned up."].join(" ");
   }
 
-  return Response.json({ score, level, verdict, clues, unchecked, link });
+  return Response.json({ score, level, verdict, clues, unchecked, link }, { headers: { "Access-Control-Allow-Origin": "*" } });
 }
