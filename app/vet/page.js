@@ -2,7 +2,7 @@
 
 import AskDetective from "../AskDetective";
 import Seal from "../Seal";
-import { use, useEffect, useState } from "react";
+import { Suspense, use, useEffect, useEffectEvent, useState } from "react";
 import Checklist from "../dispute/Checklist";
 
 const kinds = [
@@ -23,11 +23,21 @@ const ring = { safe: "HUNCH VERIFIED", caution: "HUNCH CAUTION", danger: "HUNCH 
 const color = { safe: "text-safe", caution: "text-amber", danger: "text-danger" };
 const bar = { safe: "bg-safe", caution: "bg-amber", danger: "bg-danger" };
 
+function Start({ searchParams, onStart }) {
+  const text = use(searchParams).input;
+  const fire = useEffectEvent(onStart);
+
+  useEffect(() => {
+    if (text) fire(text);
+  }, [text]);
+
+  return null;
+}
+
 export default function Vet({ searchParams }) {
-  const start = use(searchParams).input;
-  const [input, setInput] = useState(start || "");
+  const [input, setInput] = useState("");
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(Boolean(start));
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   function lookup(text) {
@@ -37,20 +47,28 @@ export default function Vet({ searchParams }) {
       .finally(() => setLoading(false));
   }
 
-  function investigate(e) {
-    e.preventDefault();
+  function begin(text) {
     setLoading(true);
     setResult(null);
     setError("");
-    lookup(input);
+    lookup(text);
   }
 
-  useEffect(() => {
-    if (start) lookup(start);
-  }, [start]);
+  function investigate(e) {
+    e.preventDefault();
+    begin(input);
+  }
+
+  function start(text) {
+    setInput(text);
+    begin(text);
+  }
 
   return (
     <div className="space-y-10">
+      <Suspense>
+        <Start searchParams={searchParams} onStart={start} />
+      </Suspense>
       <div className="space-y-4">
         <p className="label">Before you pay</p>
         <h1 className="headline text-4xl sm:text-5xl">Vet a seller</h1>
