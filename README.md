@@ -45,6 +45,15 @@ Every dispute on the account in one place, pulled live from PayPal. Each case sh
 ### 🕵️ Ask the Detective
 A Q&A box on every page. Ask about a seller, your case, or PayPal scams in general, and Hunch answers with the context of what you're looking at. It sticks to buying, selling, payments and disputes.
 
+### 🧩 Hunch for Chrome and Brave
+Vet a seller without leaving their page. Click the Hunch icon in your toolbar and a small glass box with the detective floats over the page, already holding the page's link. Press Enter, watch him search, and the score, seal, verdict and top clues show up right there. Drag it anywhere. It only runs when you click it.
+
+**Install it (about a minute):**
+1. Download this repo (**Code → Download ZIP**) and unzip it.
+2. Open `chrome://extensions` in Chrome or `brave://extensions` in Brave.
+3. Turn on **Developer mode** (top right), click **Load unpacked**, and pick the `extension` folder.
+4. Pin Hunch from the puzzle-piece menu, then click it on any store page.
+
 ## It's a tool, not an agent
 
 Hunch investigates and drafts, but you make the call. Nothing is filed or sent without you pressing the button.
