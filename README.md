@@ -4,6 +4,8 @@
 
 Built for the PayPal AI Hackathon.
 
+**Watch the demo: [1-minute video](https://youtu.be/JX1iBUH357M)**
+
 **Try it live: [hunch-b3dy.onrender.com](https://hunch-b3dy.onrender.com)**
 (It runs on a free server that sleeps when idle, so the first load can take up to a minute.)
 
