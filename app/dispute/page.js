@@ -37,6 +37,7 @@ export default function Dispute() {
   const [transactions, setTransactions] = useState(null);
   const [picked, setPicked] = useState(null);
   const [manual, setManual] = useState(false);
+  const [all, setAll] = useState(false);
   const [story, setStory] = useState("");
   const [built, setBuilt] = useState(null);
   const [description, setDescription] = useState("");
@@ -118,7 +119,7 @@ export default function Dispute() {
         {!transactions && <p className="text-muted text-sm animate-pulse">Pulling your recent payments...</p>}
         {noList && <p className="text-muted">No recent payments showed up from PayPal yet. Enter the payment yourself and Hunch takes it from there.</p>}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          {transactions?.map((t) => (
+          {(all ? transactions : transactions?.slice(0, 6))?.map((t) => (
             <button
               key={t.id}
               onClick={() => {
@@ -140,6 +141,11 @@ export default function Dispute() {
             </button>
           ))}
         </div>
+        {transactions?.length > 6 && (
+          <button onClick={() => setAll(!all)} className="block text-sm text-muted transition-colors hover:text-paper pt-2">
+            {all ? "Show less ▴" : "Show all ▾"}
+          </button>
+        )}
         {transactions?.length > 0 && (
           <button onClick={() => setManual(!manual)} className="block text-sm text-muted transition-colors hover:text-paper pt-2">
             Don&apos;t see it? Enter it yourself {manual ? "▴" : "▾"}
