@@ -10,7 +10,7 @@ function stamp(date) {
 function search(monthsAgo) {
   const end = new Date(Date.now() - monthsAgo * month);
   const start = new Date(end - month);
-  return paypal(`/v1/reporting/transactions?start_date=${stamp(start)}&end_date=${stamp(end)}&fields=all&page_size=50`);
+  return paypal(`/v1/reporting/transactions?start_date=${stamp(start)}&end_date=${stamp(end)}&fields=all&page_size=500`);
 }
 
 export async function GET() {
