@@ -90,6 +90,7 @@ Hunch's own checks (domain age, HTTPS, scam patterns, PayPal data) run first, an
 | **PayPal Disputes API** | Files disputes, lists every case on the account, reads case status, and tracks outcomes |
 | **PayPal Transaction Search API** | Lists recent payments to dispute |
 | **RDAP** | Looks up how long a website's domain has existed |
+| **Render** | Hosts the live site |
 
 Everything runs against the **PayPal sandbox**, so no real money moves.
 
